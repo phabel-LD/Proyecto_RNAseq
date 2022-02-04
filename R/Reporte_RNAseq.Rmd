@@ -136,12 +136,61 @@ summary(rse_gene_SRP079058$assigned_gene_prop)
 El siguiente paso es plotear esos primeros resultados
 
 ```{r, echo=FALSE}
-
-
+with(colData(rse_gene_SRP079058), plot(assigned_gene_prop, sra_attribute.tissue))
 ```
 
+```{r, echo=FALSE}
+# Buscar diferencia entre los dos grupos de tejidos viendo sus estadísticas con "summary()"
+with(colData(rse_gene_SRP079058), tapply(assigned_gene_prop, sra_attribute.tissue, summary))
+```
+Se puede visualizar con un scatter plot
+```{r, echo=FALSE}
+with(colData(rse_gene_SRP079058), plot(assigned_gene_prop, sra_attribute.tissue, col=sra_attribute.tissue))
+```
 
+Podemos ver que la expresión tiene dos tendencias muy marcdas, lo cual es de esperarse al tener dos tipos de tejido.
 
+Una vez con el objeto original creado, es bueno guardarlo como un seguro.
+
+```{r, echo=FALSE}
+# Guardar antes de hacer limpieza
+rse_gene_SRP079058_unfiltered <- rse_gene_SRP079058
+```
+
+Se puede proceder a la limpieza de datos. Pero primero hay que analizar la calidad de los mismos.
+
+```{r, echo=FALSE}
+#Primero visualizamos un histograma con los datos
+hist(rse_gene_SRP079058$assigned_gene_prop)
+```
+
+```{r, echo=FALSE}
+# Establezcamos un valor de corte
+table(rse_gene_SRP079058$assigned_gene_prop < 0.1)
+rse_gene_SRP079058 <- rse_gene_SRP079058[, rse_gene_SRP079058$assigned_gene_prop > 0.1]
+
+```
+Se calculan las medias de expresión de las muestras
+
+```{r, echo=FALSE}
+# Usar rowMeans() y el término "counts" sobre la matriz assay()
+gene_means <- rowMeans(assay(rse_gene_SRP079058, "counts"))
+summary(gene_means)
+```
+Ahora el mínimo se ha igualado a cero. Y es necesario eliminar aquellos genes por debajo de cierta expresión, en este caso la del primer cuartil.
+
+```{r, echo=FALSE}
+# Para asegurar rigor en el proceso se eliminan los genes por debajo del primer cuartil.
+rse_gene_SRP079058 <- rse_gene_SRP079058[gene_means > 0.01, ]
+# Revisar dimensiones finales
+dim(rse_gene_SRP079058)
+```
+Se puede revisar el porcentaje de genes que pasaron los criterios de limpieza.
+```{r, echo=FALSE}
+# Se retoma como punto de referencia "rse_gene_SRP079058_unfiltered" con todos los genes originales sin filtro ni limpieza.
+round(nrow(rse_gene_SRP079058) / nrow(rse_gene_SRP079058_unfiltered)*100, 2)
+```
+Eso quiere decir que se mantuvieron 62.36% de los genes originales.
 ### Normalización
 
 ### Análisis de Expresión Diferencial
