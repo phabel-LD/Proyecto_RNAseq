@@ -9,22 +9,158 @@ Author: Phabel Antonio López Delgado
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+# Proyecto: Reporte RNA-seq
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+## Introduccion
 
-```{r cars}
-summary(cars)
+
+## Objetivos
+
+
+## Desarrollo
+
+### Descarga de librerías
+
+El primer paso es preparar las librerías necesarias durante todo el pipeline.
+
+```{r, echo=FALSE}
+# Para descarga de datos
+library("recount3")
+# Para normalización
+library("edgeR")
+# Para plots y visualización
+library("ggplot2")
+library("pheatmap")
+library("RColorBrewer")
+# Para análisis de Expresión Diferencial
+library("limma")
 ```
 
-## Including Plots
+### Recopilación de datos
 
-You can also embed plots, for example:
+Se buscó un dataset de interés en <https://jhubiostatistics.shinyapps.io/recount3-study-explorer/>
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+Para el presente análisis de expresión diferencial se utilizarán datos de <https://www.ncbi.nlm.nih.gov/sra/?term=SRP079058> procesados con *reocunt3* <https://bioconductor.org/packages/release/bioc/html/recount3.html>
+
+```{r, echo=FALSE}
+# Acceder a proyectos disponibles
+projects <- available_projects()
+# Cargar dataset para crear objeto RangeSummarizedExperiment
+rse_gene_SRP079058 <- create_rse(
+  subset(
+    projects,
+    project=="SRP079058" & project_type=="data_sources"
+  )
+)
+
+# Crear matriz assay a partir de objeto SRE
+assay(rse_gene_SRP079058, "counts") <- compute_read_counts(rse_gene_SRP079058)
+```
+El siguiente paso es asegurar la consistencia de los datos.
+
+```{r, echo=FALSE}
+rse_gene_SRP079058
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+# Al analizar los datos, estos parecen tener buena con
+rse_gene_SRP079058$sra.sample_attributes[1:10]
+```
+En este caso, el dataset no parece tener inconsistencias ni campos no uniformemente incompletos. Por lo que no se realizarán correcciones mayores.
+
+A continuación se expandrá la información con los metadatos en *colData()* contenidos en *rse_gene_SRP079058*
+
+```{r, echo=FALSE}
+rse_gene_SRP079058 <- expand_sra_attributes(rse_gene_SRP079058)
+rse_gene_SRP079058
+```
+Ahora se puede revisar los metadatos agregados en columnas de interés.
+
+```{r, echo=False}
+
+colData(rse_gene_SRP079058)[
+    ,
+    grepl("^sra_attribute", colnames(colData(rse_gene_SRP079058)))
+]
+```
+El siguiente paso es renombrar los caracteres a números o factores.
+
+```{r, echo=FALSE}
+rse_gene_SRP079058$sra_attribute.cell_type <- factor(rse_gene_SRP079058$sra_attribute.cell_type)
+
+rse_gene_SRP079058$sra_attribute.diagnosis <- factor(rse_gene_SRP079058$sra_attribute.diagnosis)
+
+rse_gene_SRP079058$sra_attribute.neoplastic <- factor(rse_gene_SRP079058$sra_attribute.neoplastic)
+
+rse_gene_SRP079058$sra_attribute.patient_id <-  factor(rse_gene_SRP079058$sra_attribute.patient_id)
+
+rse_gene_SRP079058$sra_attribute.plate_id <- as.numeric(rse_gene_SRP079058$sra_attribute.plate_id)
+
+rse_gene_SRP079058$sra_attribute.selection <- factor(rse_gene_SRP079058$sra_attribute.selection)
+
+rse_gene_SRP079058$sra_attribute.source_name <- factor(rse_gene_SRP079058$sra_attribute.source_name)
+
+rse_gene_SRP079058$sra_attribute.tissue <- factor(rse_gene_SRP079058$sra_attribute.tissue)
+
+rse_gene_SRP079058$sra_attribute.tsne_cluster <- as.numeric(rse_gene_SRP079058$sra_attribute.tsne_cluster)
+
+rse_gene_SRP079058$sra_attribute.well <- factor(rse_gene_SRP079058$sra_attribute.well)
+
+```
+
+Se analiza el resumen de las variables de interés
+
+```{r, echo=FALSE}
+# Poner atención particularmente en la variable de "tissue"
+head(summary(as.data.frame(colData(rse_gene_SRP079058)[
+  ,
+  grepl("^sra_attribute.[cell_type|neoplastic|diagnosis|tissue]", colnames(colData(rse_gene_SRP079058)))
+])))
+
+```
+El siguiente paso es encontrar diferencias entre las variables de interés. En este caso se busca hacer un análisis diferencial entre los genes expresados en tejidos tumorales o periféricos; información del apartado *sra_attribute.tissue*
+
+```{r, echo=FALSE}
+# Nótese que el factor "tissue" ya cuenta con la clasificación adecuada para el objetivo: análisis de expresión difernecial entre tejidos cancerosos.
+table(rse_gene_SRP079058$sra_attribute.tissue)
+```
+A continuación se hará una operación para determinar la proporción de fragmentos de interés. Véase la documentación en: <http://rna.recount.bio/docs/quality-check-fields.html>
+
+```{r, echo=FALSE}
+# Hacer el cociente de interés para obtener proporciones entre los niveles de expresión.
+rse_gene_SRP079058$assigned_gene_prop <- rse_gene_SRP079058$recount_qc.gene_fc_count_all.assigned / rse_gene_SRP079058$recount_qc.gene_fc_count_unique.total
+# Revisar el resumen de los datos resultantes.
+summary(rse_gene_SRP079058$assigned_gene_prop)
+```
+El siguiente paso es plotear esos primeros resultados
+
+```{r, echo=FALSE}
+
+
+```
+
+
+
+### Normalización
+
+### Análisis de Expresión Diferencial
+
+### Resultados
+
+
+## Discusión
+
+
+## Conclusiones
+
+
+## Fuentes y ligas de interés
+```{r, echo=FALSE}
+citation("recount3")
+citation("edgeR")
+citation("ggplot2")
+citation("pheatmap")
+citation("RColorBrewer")
+citation("limma")
+```
