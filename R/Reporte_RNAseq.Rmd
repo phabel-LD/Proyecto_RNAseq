@@ -1,7 +1,9 @@
 ---
 title: "Reporte_RNAseq"
-output: html_document
-date: Febrero, 2022
+output:
+  html_document: default
+  pdf_document: default
+date: "Febrero, 2022"
 Author: Phabel Antonio López Delgado
 ---
 
@@ -40,6 +42,7 @@ library("RColorBrewer")
 library("limma")
 ```
 
+
 ### Recopilación de datos
 
 Se buscó un dataset de interés en <https://jhubiostatistics.shinyapps.io/recount3-study-explorer/>
@@ -60,6 +63,8 @@ rse_gene_SRP079058 <- create_rse(
 # Crear matriz assay a partir de objeto SRE. Convertir datos crudos en números de lecturas.
 assay(rse_gene_SRP079058, "counts") <- compute_read_counts(rse_gene_SRP079058)
 ```
+
+
 El siguiente paso es asegurar la consistencia de los datos.
 
 ```{r Análisis de Datos, echo=TRUE}
@@ -71,6 +76,8 @@ rse_gene_SRP079058
 # AL analizar los datos, estos parecen tener buena con
 rse_gene_SRP079058$sra.sample_attributes[1:10]
 ```
+
+
 En este caso, el dataset no parece tener inconsistencias ni campos no uniformemente completos. Por lo que no se realizarán correcciones mayores.
 
 A continuación se expandrá la información con los metadatos en *colData()* contenidos en *rse_gene_SRP079058*
@@ -81,6 +88,8 @@ rse_gene_SRP079058 <- expand_sra_attributes(rse_gene_SRP079058)
 # Al revisar datos expandidos se ve un aumento en los elementos de "colData_names"
 rse_gene_SRP079058
 ```
+
+
 Ahora se puede revisar los atributos guadados en *colData* del *rse_gene_SRP079058*. Nótese que no hay elemento *RIN*, por lo que se asumirá que todas las muestras de RNA tienen una calidad semejante.
 
 ```{r, echo=TRUE}
@@ -90,6 +99,8 @@ colData(rse_gene_SRP079058)[
     grepl("^sra_attribute", colnames(colData(rse_gene_SRP079058)))
 ]
 ```
+}
+
 El siguiente paso es asegurar que los datos a usar en el modelo estadístico tengan el formarto adecuado, renombrando los caracteres a números o factores.
 
 ```{r, echo=TRUE}
@@ -115,6 +126,7 @@ rse_gene_SRP079058$sra_attribute.well <- factor(rse_gene_SRP079058$sra_attribute
 
 ```
 
+
 Se analiza el resumen de las variables de interés para proceder con el proceso de limpieza de datos.
 
 ```{r, echo=TRUE}
@@ -124,12 +136,16 @@ summary(as.data.frame(colData(rse_gene_SRP079058)[
   grepl("^sra_attribute.[cell_type|neoplastic|selection|tissue]", colnames(colData(rse_gene_SRP079058)))
 ]))
 ```
+
+
 El siguiente paso es encontrar diferencias entre las variables de interés. En este caso se busca hacer un análisis de expresión diferencial entre los genes expresados en tejidos tumorales o periféricos; información del apartado *sra_attribute.tissue*
 
 ```{r, echo=TRUE}
 # Nótese que el factor "tissue" ya cuenta con la clasificación adecuada para el objetivo: análisis de expresión difernecial entre tejidos cancerosos.
 table(rse_gene_SRP079058$sra_attribute.tissue)
 ```
+
+
 A continuación se hará una operación para determinar la proporción de fragmentos de interés. Véase la documentación en: <http://rna.recount.bio/docs/quality-check-fields.html>
 
 ```{r Análisis de Calidad, echo=TRUE}
@@ -139,6 +155,8 @@ rse_gene_SRP079058$assigned_gene_prop <- rse_gene_SRP079058$recount_qc.gene_fc_c
 # Al revisar el resumen de los datos resultantes se ve claramente que los datos no son de la mejor calidad, pues la media es 0.17956 y el tercer cuartil es 0.21188. Pero se ve que sí hay muestras de buena calidad con un máximo de 0.96298.
 summary(rse_gene_SRP079058$assigned_gene_prop)
 ```
+
+
 El siguiente paso es plotear esos primeros resultados de *assigned_gene_prop*.
 
 ```{r, echo=TRUE}
@@ -149,11 +167,14 @@ with(colData(rse_gene_SRP079058), plot(x = sra_attribute.tissue,
                                        col = sra_attribute.tissue))
 ```
 
+
 Ahora podemos comparar los datos de ambos tejidos directamente. Se puede notar que, aunque hay casi el doble de muestras de *tumor* (1246) que de *periphery* (2343), ambos tejidos tienen el mismo tipo de calidad denotada en *assigned_gene_prop*. Ya que ni los *boxplots* ni los *summary()* varian mucho, ni en valor mínimo, media o máximos.
 ```{r, echo=TRUE}
 # Buscar diferencia entre los dos grupos de tejidos viendo sus estadísticas con "summary()"
 with(colData(rse_gene_SRP079058), tapply(assigned_gene_prop, sra_attribute.tissue, summary))
 ```
+
+
 Se puede visualizar con para las otra variables de interés *cell_type|neoplastic|selection|tissue*,
 ```{r, echo=TRUE}
 with(colData(rse_gene_SRP079058), plot(x = sra_attribute.cell_type,
@@ -176,6 +197,8 @@ with(colData(rse_gene_SRP079058), plot(x = sra_attribute.selection,
                                        ylab = "assigned_gene_prop",
                                        col = sra_attribute.selection))
 ```
+
+
 Podemos ver que, en general, todas las proporciones asignadas a genes son bajas en todas las variables de interés. Esto es indeseado porque se busca que los datos tengan la mejor calidad posible; desafortunadamente, la mayoría de los datos tienen baja calidad, por lo que será imposible purgar los datos sin comprometer la cantidad de los mismos a ser analizados.
 
 Para poder comparar los datos sin filtrar originales y filtrados, se guardarán los primeros en *rse_gene_SRP079058_unfiltered*
@@ -187,11 +210,14 @@ rse_gene_SRP079058_unfiltered <- rse_gene_SRP079058
 rse_gene_SRP079058_unfiltered
 ```
 
+
 Se puede proceder a la limpieza de datos. Por buena práctica y convencionalidad, se eliminarán muestras y luego se eliminarán genes.
 ```{r, echo=TRUE}
 #Primero visualizamos un histograma de la proporción de lecturas asignadas a genes. Los datos desde luego que parecen seguir una distribución Normal unimodal con la media en 0.1 < mu < 0.2, pues la media obtenida originalmente era 0.17956
 hist(rse_gene_SRP079058$assigned_gene_prop)
 ```
+
+
 Para ver el comportamiento y frecuencias de los datos de mejor calidad, se igualará el valor de corte a la media, con la finalidad de mover la media lo más posible hacia un valor de *assigned_gene_prop* mayor. La razón esencial de esta decisión es que, si no se eliminan las muestras con valores cercanos o menores a la media, la distribución no cambiará mucho debido a la enorme diferencia entre la frecuencia de muestras con valores de *assigned_gene_prop* bajos y altos.
 ```{r, echo=TRUE}
 # Eliminemos muestras con valor menor a la media. Los resultados son radicales, pues se elimina la mitad de las muestras. Habrá que continuar con el análisis para decidir si mantener dicho cambio o no. Pues aunque se eliminan 2168/3589, las 1421 muestras restantes aun son un buen volumen con el cual trabajar y obtener buenos resultados.
@@ -201,6 +227,8 @@ rse_gene_SRP079058 <- rse_gene_SRP079058[, rse_gene_SRP079058$assigned_gene_prop
 # Se puede ver que ahora el objeto actualizado solo mantuvo 1421 muestras.
 rse_gene_SRP079058
 ```
+
+
 El siguiente paso es la eliminación de genes. Para ello se necesita calcular los niveles medios de expresión de los mismos en las muestras mantenidas.
 
 ```{r, echo=FALSE}
@@ -210,6 +238,8 @@ gene_means <- rowMeans(assay(rse_gene_SRP079058, "counts"))
 # El summary de datos nos indica que la mediana es de 0.05, un puntaje muy bajo. Por lo que se optará por tomarla como punto de corte en la eliminación de genes y purgar la mitad de los mismos; una eliminación equiparable a la de muestras.
 summary(gene_means)
 ```
+
+
 Ahora el mínimo se ha igualado a cero. Y es necesario eliminar aquellos genes por debajo de cierta expresión, en este caso la de la mediana.
 
 ```{r, echo=TRUE}
@@ -224,6 +254,8 @@ Se puede revisar el porcentaje de genes que pasaron los criterios de limpieza.
 # Se retoma como punto de referencia "rse_gene_SRP079058_unfiltered" con todos los genes originales sin filtro ni limpieza. Aproximadamente la mitad de los genes prevalecieron.
 round(nrow(rse_gene_SRP079058) / nrow(rse_gene_SRP079058_unfiltered)*100, 2)
 ```
+
+
 Eso quiere decir que se mantuvieron 49.99% de los genes originales. Veamos sus características de interés nuevamente.
 
 ```{r, echo=TRUE}
@@ -237,6 +269,8 @@ with(colData(rse_gene_SRP079058), plot(x = sra_attribute.tissue,
                                        ylab = "assigned_gene_prop",
                                        col = sra_attribute.tissue))
 ```
+
+
 Podemos ver que la media del puntaje sí mejoro, pero ínfimamente. Debido a que aún se tiene buena cantidad de datos, se propone una segunda limpieza con los mismos criterios que la enterior para la eliminación de muestras y genes.
 
 ```{r, echo=TRUE}
@@ -249,6 +283,7 @@ rse_gene_SRP079058 <- rse_gene_SRP079058[, rse_gene_SRP079058$assigned_gene_prop
 rse_gene_SRP079058 <- rse_gene_SRP079058[rowMeans(assay(rse_gene_SRP079058, "counts")) > summary(rowMeans(assay(rse_gene_SRP079058, "counts")))["Median"], ]
 ```
 
+
 Ahora comparemos los datos previos con est segunda limpieza
 
 ```{r, echo=TRUE}
@@ -260,6 +295,8 @@ dim(rse_gene_SRP079058_fil_1)
 summary(rse_gene_SRP079058$assigned_gene_prop)
 dim(rse_gene_SRP079058)
 ```
+
+
 Se considera que la segunda limpieza mejoró la calidad de los datos para que todos sobrepasaran el *assigned_gene_prop > 0.2483*, lo cual se consider un buen criterio. No obstanete, hubo mucha información sacrificada. Por lo que queda decidir qué elección de datos usar para el resto del análisis.
 
 El dataset final que se usará será el de la segunda limpieza. Con el fin de trabajar con los mejores datos; posee mucha menos información que los datos originales y tras la primer limpieza, pero aún mantiene buena cantidad de datos: 15958 genes & 517 muestras.
@@ -287,6 +324,7 @@ dge <- DGEList(
 dge <- calcNormFactors(dge)
 ```
 
+
 ### Análisis de Expresión Diferencial
 
 Se puede revisar la expresión en *rse_gene_SRP07905* con boxplots.
@@ -296,6 +334,7 @@ ggplot(as.data.frame(colData(rse_gene_SRP079058_fil_2)), aes(y = assigned_gene_p
 
 ```
 
+
 Ahora se puede crear un modelo estadístico pertinente. En esta ocasión se optará por uno simple para obtener resultados más directos. Pero nótese que aún así, las combinaciones dan un modelo complejo.
 
 ```{r Modelo, echo=FALSE}
@@ -304,12 +343,15 @@ mod <- model.matrix(~ sra_attribute.tissue + sra_attribute.neoplastic + sra_attr
 colnames(mod)
 ```
 
+
 Ya se tiene el modelo estadístico, ahora se realiza el análisis de expresión diferencial con el paquete *limma*, el cual usa la distribución binomial negativa para modelar los datos. Para estimar sus coeficientes, se encuentran máximos (relativos) de forma iterativa.
 
 ```{r voom, echo=TRUE}
 # Usar "voom" como el método iterativo hasta converger.
 vGene <- voom(dge, mod, plot = TRUE)
 ```
+
+
 La gráfica de *voom* tiene los valores de expresión en el eje X y la varianza en el eje Y, y se puede apreciar un comportamiento asintótico favorable. Pero los estimados de varianza todavía pueden mejorarse, para aumentar la precisión de los resultados estadísticos.
 ```{r limma, echo=TRUE}
 # Calcular t.Values con limma (t-Student)
@@ -332,11 +374,14 @@ Ahora se deben rescatar los genes Diferencialmente Expresados entre *tissue.tumo
 # Purgar con base en P.Values.
 table(de_results$adj.P.Val < 0.05)
 ```
+
+
 Los resultados dan 10889 genes Diferencialmente Expresados, un comportamiento esperado tieniendo en cuenta que la pregunta biológica base es la comparación de niveles de expresión de genes entre tejidos tumorales y periféricos de glioblastoma. Y desde luego que habrá diferenica entre los genes expresados en ambos tejidos, puesto que el cancer es una enfermedad caracterizada por su complejidad genómica.
 ```{r, echo=TRUE}
 # Ahora visualicemos los resultados estadísticos. Recordando que el coeficiente de interés es el 2: "tissueTumor"
 plotMA(eb_results, coef = 2)
 ```
+
 
 Al analizar el gráfico que compara el logFC y el promedio de expresión, se puede ver que los resultados se concentran un una zona particular con el *Average log-expression* entre 0 y 5; y el *logFC* principalmente entre -1 y 0.
 
@@ -345,6 +390,8 @@ También se puede visualizar con un *Volcano Plot*, que muestra el log2FC en eje
 # Seguir teniendo presente el coeficiente de interés 2: tissueTumor.
 volcanoplot(eb_results, coef = 2, highlight = 4, names = de_results$gene_name)
 ```
+
+
 Algo sumamente interesante es que la mayoría de los niveles de *log2FC* son negativos entre -1 y 0. Lo cual apunta a que la **Subexpresión Diferencial** de dichos genes son la principal diferencia entre tejido periférico y tumoral. Esto apunta a que **los genes rescatados del dataset son genes sumpresores de tumores subexpresados en tejido tumoral.** Los cuatro genes principales son:
 
 * PLPP4 <https://www.genecards.org/cgi-bin/carddisp.pl?gene=PLPP4>
@@ -367,6 +414,8 @@ colnames(df) <-c("Tissue", "Neoplastic", "Selection", "Cell_type")
 # Visualizar df
 head(df)
 ```
+
+
 Se puede continuar con la visualización gráfica de los resultados para extraer más conclusiones.
 ```{r heatmap, echo=TRUE}
 # Obtener nombres de genes
@@ -381,6 +430,8 @@ pheatmap(
   annotation_col = df
 )
 ```
+
+
 Otro análisis interesante es el de PCA entre las variables de interés. Primero puede ser sobre los tipos de tejido.
 ```{r MDS por tejido, echo=TRUE}
 # Seleccionar datos sobre tipo de tejido.
@@ -392,6 +443,8 @@ col.group <- as.character(col.group)
 # MDS por tipo de tejido
 plotMDS(vGene$E, labels = df$Tissue, col = col.group)
 ```
+
+
 También puede ser sobre el tipo celular.
 ```{r MDS por tipo celular, echo=TRUE}
 # Seleccionar datos sobre tipo celular
@@ -403,6 +456,8 @@ col.group <- as.character(col.group)
 # MDS por tipo celular
 plotMDS(vGene$E, labels = df$Cell_type, col = col.group)
 ```
+
+
 O sobre la selección celular.
 ```{r MDS por selección celular, echo=TRUE}
 # Seleccionar datos sobre selección
@@ -414,6 +469,7 @@ col.group <- as.character(col.group)
 # MDS por selección
 plotMDS(vGene$E, labels = df$Selection, col = col.group)
 ```
+
 
 O finalmente sobre el estado de neoplasticidad
 ```{r MDS por neoplasticidad, echo=TRUE}
@@ -429,38 +485,41 @@ plotMDS(vGene$E, labels = df$Neoplastic, col = col.group)
 
 ## Discusión
 
-Como se puede observar a lo largo de los 4 plots principales, los datos poseen una dirección pero con cierto ruido. En el primer plot, el heatmap, se puede observar que los genes más altamente expresados son muy escasos, y la mayoría tiene un nivel de expresión cercano a cero, o bien, están subexpresados. Este comportamiento seguramente tiene su base en la calidad de los datos, pues hay que recordar que el dataset fue sometido a dos rondas de limpieza a través de la cual una considerable cantidad de información fue sacrificada. Esto puede indicar que, los cambios ligeros en los niveles de expresión de los genes son inherentes a la formación de glioblastoma; lo cual es algo totalmente plausible, puesto que ligera sobreexpresión o subexpresión de ciertos genes clave puede ser suficiente para desencadenar los procesos oncogénicos.
+Como se puede observar a lo largo de los 4 plots principales, los datos poseen una dirección pero con cierto ruido. En el primer plot, el heatmap, se puede observar que los genes más altamente expresados son muy escasos, y la mayoría tiene un nivel de expresión cercano a cero, o bien, están subexpresados. Este comportamiento seguramente tiene su base en la calidad de los datos, pues hay que recordar que el dataset fue sometido a dos rondas de limpieza a través de las cuales una considerable cantidad de información fue sacrificada. Esto puede indicar que, los cambios ligeros en los niveles de expresión de los genes son inherentes a la formación de glioblastoma; lo cual es algo totalmente plausible, puesto que ligera sobreexpresión o subexpresión de ciertos genes clave puede ser suficiente para desencadenar los procesos oncogénicos.
 
-Analizando más a fondo dicho primer heatmap, se puede observar que los niveles de expresión de ciertos genes resaltan de entre los demás. Algunos ligeramente notorios son: *SMOC1*, *RP11~*, *DSEL* & *LYL1*. Los cuales ya se han relacionado directamente con ciertos tipos de cáncer incluido el glioblastoma, por lo que su expresión es totalmente esperada. No obstante, el más notorio es indudablemente *FTH1P2*, el cual parece Expresarse Diferencialmente a lo largo de todos los tejidos, pero sus zonas rojas de mayor expresión corresponden a tejido tumoral y las de mediana expresión a tejido periférico. Este gen, *FTH1P2*, es un realidad el *Ferritin Heavy Chain 1 Pseudogene 2*, y su rol participa en el metabolismo y regulación del *Fe*. Este punto es sumamente intersante, puesto que desde finales de los 90's se ha investigado la relación que posee el metabolismo y altas concentraciones de *Ferretina* con el surgimiento de *glioblastoma*.[2.1] Más actualmente, evidencia en 2020 ha apuntado a que los tumores gliales sintetizan y secretan ferretina, causando ferretinemia asociada a *Glioblastoma Multiforme (GBM)*. [2.2] Y finalmente, desde 2021 se ha asociado más la homeostásis del Fe como un punto crítico en el desarrollo de muchos tipos de cáncer, incluyendo el glioblastoma; siendo la sobreprodución e incremento en los niveles de Fe y ferretina un factor clave. [2.3]
+Analizando más a fondo dicho primer heatmap, se puede observar que los niveles de expresión de ciertos genes resaltan de entre los demás. Algunos ligeramente notorios son: *SMOC1*, *RP11~*, *DSEL* & *LYL1*. Los cuales ya se han relacionado directamente con ciertos tipos de cáncer incluido el glioblastoma, por lo que su expresión es totalmente esperada. No obstante, el más notorio es indudablemente *FTH1P2*, el cual parece Expresarse Diferencialmente a lo largo de todos los tejidos, pero sus zonas rojas de mayor expresión corresponden a tejido tumoral y las de mediana expresión a tejido periférico. Este gen, *FTH1P2*, es un realidad el *Ferritin Heavy Chain 1 Pseudogene 2*, y participa en el metabolismo y regulación del *Fe*. Este punto es sumamente interesante, puesto que desde finales de los 90's se ha investigado la relación que posee el metabolismo y altas concentraciones de *Ferretina* con el surgimiento de *glioblastoma*.[2.1] Más actualmente, evidencia en 2020 ha apuntado a que los tumores gliales sintetizan y secretan ferretina, causando ferretinemia asociada a *Glioblastoma Multiforme (GBM)*. [2.2] Y finalmente, desde 2021 se ha asociado más la homeostásis del Fe como un punto crítico en el desarrollo de muchos tipos de cáncer, incluyendo el glioblastoma; siendo la sobreprodución e incremento en los niveles de Fe y ferretina un factor clave. [2.3]
 
 Se puede apreciar que los niveles de expresión de genes sí son diferentes entre el tejido periférico y el tumoral; de particular interés es de nuevo *FTH1P2* que se expresa constantemente a lo largo de todas las muestras de tejido, pero sus niveles de expresión mayores son en el tejido tumoral. Lo cual apoya y concuerda con la teoría mecionada de que la homeostásis y sobrereglación del hierro es importante en el desarrollo de tumores, y en este caso particular, de glioblastoma.
 
-Al analizar los otros cuatro plots que muestran un *PCA*, se puede ver una clara separación de las muestras en dos nubes diagonales marcadas. Cuando se analiza sobre el tipo de tejido, se puede observar que la mayoría de tejido tumoral y periférico sí se separa en dos nubes, pero con cierto ruido que perturba la segunda nube de tejido tumoral. Con respecto al tipo celular, se observa que la separación principal entre el primer y segundo cluster aisla completamente el tipo celular *immune cell* de los otros, los cuales a su vez también se pueden separar en subclusters más pequeños pero aún aglomerados. Comparando los dos primeros plots, se observa una relación entre ambas primeras nubes correspondientes a *periphery_immuneCell*; una segunda relación es *tumor_neoplastic*. Esta última relación parece lógica debido a que la neoplasia maligna usualmente conlleva la formación de un tumor. Este último punto también presenta concordancia con el cuarto plot, pues se pueden apreciar las relacione entre el primer, segundo y tercer plot: *periphery_immuneCell_Regular* y *tumor_neoplastic_neoplastic*; lo cual mantiene la lógica de que la expresión en tejido periférico es relativamente regular, miemtras que la expresión en tejido tumoral se asocia con la neoplasia. Finalmenrte, el tercer plot no guarda una relación muy directa con los otros tres, pero sí separa la selección celular de *MicrogliaCD48* de las demás, lo cual podría sugerir que la expresión del glioblastoma en la microglia es diferente a la de los astrocitos, neuronas y oligodendrocitos; y que estos últimos presentan patrones de expresión similares.
+Al analizar los otros cuatro plots que muestran un *PCA*, se puede ver una clara separación de las muestras en dos nubes diagonales marcadas. Cuando se analiza sobre el tipo de tejido, se puede observar que la mayoría de tejido tumoral y periférico sí se separa en dos nubes, pero con cierto ruido que perturba la segunda nube de tejido tumoral. Con respecto al tipo celular, se observa que la separación principal entre el primer y segundo cluster aisla completamente el tipo celular *immune cell* de los otros, los cuales a su vez también se pueden separar en subclusters más pequeños pero aún aglomerados. Comparando los dos primeros plots, se observa una relación entre ambas primeras nubes correspondientes a *periphery_immuneCell*; una segunda relación es *tumor_neoplastic*. Esta última relación parece lógica debido a que la neoplasia maligna usualmente conlleva la formación tumores. Este último punto también presenta concordancia con el cuarto plot, pues se pueden apreciar las relacione entre el primer, segundo y cuarto plot: *periphery_immuneCell_Regular* y *tumor_neoplastic_neoplastic*; lo cual mantiene la lógica de que la expresión en tejido periférico es relativamente regular, mientras que la expresión en tejido tumoral se asocia con la neoplasia. Finalmente, el tercer plot no guarda una relación muy directa con los otros tres, pero sí separa la selección celular de *MicrogliaCD48* de las demás, lo cual podría sugerir que la expresión del glioblastoma en la microglia es diferente a la de los astrocitos, neuronas y oligodendrocitos; y que estos últimos presentan patrones de expresión similares.
 
-Un último punto a resaltar es que, posiblemente, los resultados hubieran sido más particulares y con menos ruido si los datos utilizados hubieran tenido mejor calidad: proporción de expresión asociada a genes. Esto fue un problema constante a lo largo de todo el análisis, puesto que la media de proporción asignada a genes era muy próxima a 0.25. Como se discutido anteriormente, esto podría ser una pecularidad intrínseca de los datos de glioblastoma, y se optó por mantener esos niveles para no sacrificar más muestras y genes en el proceso. Quizá, lo niveles de expresión rescatados en el heatmap y los clusters principales de los cuatro PCA's hubieran tenido menos ruido y más resultados notorios y contundentes si se hubiera realizado una tercer ronda de limpieza, pero seguramente hubiera erradicado aún más información.
+Un último punto a resaltar es que, posiblemente, los resultados hubieran sido más particulares y con menos ruido si los datos utilizados hubieran tenido mejor calidad: proporción de expresión asociada a genes. Esto fue un problema constante a lo largo de todo el análisis, puesto que la media de proporción asignada a genes era muy próxima a 0.25. Como se discutió anteriormente, esto podría ser una pecularidad intrínseca de los datos de glioblastoma, y se optó por mantener esos niveles para no sacrificar más muestras y genes en el proceso. Quizá, lo niveles de expresión rescatados en el heatmap y los clusters principales de los cuatro PCA's hubieran tenido menos ruido y más resultados notorios y contundentes si se hubiera realizado una tercer ronda de limpieza, pero seguramente hubiera erradicado aún más información.
 
 
 ## Conclusiones
 
-En conclusión, los *Análisis de Expresión Diferencial (AED)* son herramientas poderosas para hallar los niveles de expresión de genes en ciertas muestras de tejido o células; y pueden tener implicaciones en muchas áreas que van desde la investigación básica hasta la clínica. La actividad y regulación de genes es un fenómeno importante a lo largo de las diferentes ramas de las ciencias biológicas, y hacer uso de los recursos computaciones y de software es un método muy eficiente para obtener los mejores resultados en su medición. Desde luego que un elemento de suma importancia en el análisis de *datos de secuenciación masiva*, y del *big data* en general, es la calidad y consistencia de los mismos datos; la base de todo. 
+En conclusión, los *Análisis de Expresión Diferencial (AED)* son herramientas poderosas para hallar los niveles de expresión de genes en ciertas muestras de tejido o células; y pueden tener implicaciones en muchas áreas que van desde la investigación básica hasta la clínica. La actividad y regulación de genes es un fenómeno importante a lo largo de las diferentes ramas de las ciencias biológicas, y hacer uso de los recursos computaciones y de software es una estrategia muy eficiente para obtener los mejores resultados en su medición. Desde luego que un elemento de suma importancia en el análisis de *datos de secuenciación masiva*, y del *big data* en general, es la calidad y consistencia de los mismos datos; la base de todo. 
 
-Desde luego que metodologías tan complejas como esta deben ser llevadas a cabo cuidadosa y rigurosamente, pues todas las etapas para los mejores AED's deben ser llevadas a cabo correctamente para asegurar la consistencia de todos los análisis; estas etapas van desde la pregunta de investigación y análisis, la descarga de los datos, su limpieza, normalización, selección del modelo bioestadístico y consiguiente análisis. Por supuesto que la correcta interpretación de los resultados también es esencial, por lo que, además de saber usar las herramientas bioinformáticas y de software, también es menester tener los conocimientos biológicos necesarios.
+Desde luego que metodologías tan complejas como esta deben ser llevadas a cabo cuidadosa y rigurosamente, pues todas las etapas para los mejores AED's deben ser llevadas a cabo correctamente para asegurar la consistencia de todos los resultados; estas etapas van desde la pregunta de investigación planteada, la descarga de los datos, su limpieza, normalización, selección del modelo bioestadístico y consiguiente análisis. Por supuesto que la correcta interpretación de los resultados también es esencial, por lo que, además de saber usar las herramientas bioinformáticas y de software, también es menester tener los conocimientos biológicos necesarios.
 
-Finalmente, es determinante subrayar la importancia de dichas herramientas bioinformáticas y bioestadísticas implementadas. La disponibilidad de software de bioinformática y los paquetes usados en este análisis por parte de *Bioconductor* (<http://bioconductor.org/>) fueron vitales. Es indudable que la continua disposición y creación de software de acceso libre está abriendo las puertas para experimentos y análisis *dry-lab*, que permiten la conexión de diversas mentes e ideas científicas a lo largo del mundo, permitiendo llegar cada vez más lejos y más rápido.
+Finalmente, es determinante subrayar la importancia de dichas herramientas bioinformáticas y bioestadísticas implementadas. La disponibilidad de software de bioinformática y los paquetes usados en este análisis por parte de *Bioconductor* (<http://bioconductor.org/>) fueron vitales. Es indudable que la continua disposición y creación de software de acceso libre está abriendo las puertas para experimentos y análisis *dry-lab*, que permiten la conexión de diversas disciplinas e ideas científicas a lo largo del mundo, permitiendo llegar cada vez más lejos y más rápido.
 
 
 ## Fuentes y ligas de interés
 
 ### Introducción
-1,1) Le Rhun, Emilie; Preusser, Matthias; Roth, Patrick; Reardon, David A; van den Bent, Martin; Wen, Patrick; Reifenberger, Guido; Weller, Michael (2019). Molecular targeted therapy of glioblastoma. Cancer Treatment Reviews, 80:101896.
-1.2) Wirsching HG, Galanis E, Weller M. Glioblastoma. Handb Clin Neurol. 2016;134:381-97. doi: 10.1016/B978-0-12-802997-8.00023-2. PMID: 26948367.
+
+* 1,1) Le Rhun, Emilie; Preusser, Matthias; Roth, Patrick; Reardon, David A; van den Bent, Martin; Wen, Patrick; Reifenberger, Guido; Weller, Michael (2019). Molecular targeted therapy of glioblastoma. Cancer Treatment Reviews, 80:101896.
+* 1.2) Wirsching HG, Galanis E, Weller M. Glioblastoma. Handb Clin Neurol. 2016;134:381-97. doi: 10.1016/B978-0-12-802997-8.00023-2. PMID: 26948367.
 
 ### Discusión
-2.1) Sato Y, Honda Y, Asoh T, Oizumi K, Ohshima Y, Honda E. Cerebrospinal fluid ferritin in glioblastoma: evidence for tumor synthesis. J Neurooncol. 1998 Oct;40(1):47-50. doi: 10.1023/a:1006078521790. PMID: 9874185.
-2.2) Jaksch-Bogensperger, H., Spiegl-Kreinecker, S., Arosio, P. et al. Ferritin in glioblastoma. Br J Cancer 122, 1441–1444 (2020). https://doi.org/10.1038/s41416-020-0808-8
-2.3) Guo, Q., Li, L., Hou, S., Yuan, Z., Li, C., Zhang, W., Zheng, L., & Li, X. (2021). The Role of Iron in Cancer Progression. Frontiers in oncology, 11, 778492. https://doi.org/10.3389/fonc.2021.778492
+
+* 2.1) Sato Y, Honda Y, Asoh T, Oizumi K, Ohshima Y, Honda E. Cerebrospinal fluid ferritin in glioblastoma: evidence for tumor synthesis. J Neurooncol. 1998 Oct;40(1):47-50. doi: 10.1023/a:1006078521790. PMID: 9874185.
+* 2.2) Jaksch-Bogensperger, H., Spiegl-Kreinecker, S., Arosio, P. et al. Ferritin in glioblastoma. Br J Cancer 122, 1441–1444 (2020). https://doi.org/10.1038/s41416-020-0808-8
+* 2.3) Guo, Q., Li, L., Hou, S., Yuan, Z., Li, C., Zhang, W., Zheng, L., & Li, X. (2021). The Role of Iron in Cancer Progression. Frontiers in oncology, 11, 778492. https://doi.org/10.3389/fonc.2021.778492
 
 ### Documentación de Librerías
+
 ```{r, echo=FALSE}
 citation("recount3")
 citation("edgeR")
