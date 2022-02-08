@@ -1,0 +1,1722 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\title{Proyecto: Reporte\_RNAseq}
+\author{}
+\date{\vspace{-2.5em}Febrero, 2022}
+
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Proyecto: Reporte\_RNAseq},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\begin{document}
+\maketitle
+
+\hypertarget{autor-phabel-antonio-luxf3pez-delgado}{%
+\subsubsection{Autor: Phabel Antonio López
+Delgado}\label{autor-phabel-antonio-luxf3pez-delgado}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\SpecialCharTok{::}\NormalTok{opts\_chunk}\SpecialCharTok{$}\FunctionTok{set}\NormalTok{(}\AttributeTok{echo =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{introduccion}{%
+\subsection{Introduccion}\label{introduccion}}
+
+El \emph{glioblastoma} es el tipo de tumor cerebral primario e
+intrínseco más común y agresivo en adultos.{[}1.1,1.2{]} Estos tumores
+son mayormente originados de celulas gliales troncales o progenitoras.
+{[}1.1{]} Se caracterizan por presentar condiciones histopatológicas
+como la necrosis y por mutaciones en genes encargados de la regulación
+de la via \emph{RTK/RAS/PI3K} y la de \emph{proteína de retinoblastoma
+(RB)¨}. {[}1.2{]} Asimismo, más del 90\% de los glioblastomas están
+asociados a tumores dependientes de \emph{Isocitrato Deshidrogenasa
+(IDH)}. {[}1.1,1.2{]} La incidencia de estos tumores aumenta con la edad
+y afecta mayormente a varones. {[}1.2{]}
+
+\hypertarget{objetivos}{%
+\subsection{Objetivos}\label{objetivos}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\tightlist
+\item
+  Realizar un \emph{Análisis de Expresión Diferencial (AED)} del data
+  set \emph{SRP079058} de \emph{recount3} que contiene datos de RNAseq
+  sobre la expresión de genes en tejidos de glioblastoma.
+\item
+  Construir gráficas y plots para visualizar los resultados
+  íntegramente.
+\item
+  Interpretar los resultados del análisis con base en información
+  biológica.
+\end{enumerate}
+
+\hypertarget{desarrollo}{%
+\subsection{Desarrollo}\label{desarrollo}}
+
+\hypertarget{descarga-de-libreruxedas}{%
+\subsubsection{Descarga de librerías}\label{descarga-de-libreruxedas}}
+
+El primer paso es preparar las librerías necesarias durante todo el
+pipeline.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Para descarga de datos}
+\FunctionTok{library}\NormalTok{(}\StringTok{"recount3"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: SummarizedExperiment
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: MatrixGenerics
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: matrixStats
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'MatrixGenerics'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:matrixStats':
+## 
+##     colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
+##     colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
+##     colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
+##     colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
+##     colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
+##     colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
+##     colWeightedMeans, colWeightedMedians, colWeightedSds,
+##     colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
+##     rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
+##     rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
+##     rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
+##     rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
+##     rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
+##     rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
+##     rowWeightedSds, rowWeightedVars
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: GenomicRanges
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: stats4
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: BiocGenerics
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'BiocGenerics'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     IQR, mad, sd, var, xtabs
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     anyDuplicated, append, as.data.frame, basename, cbind, colnames,
+##     dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
+##     grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
+##     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+##     rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
+##     union, unique, unsplit, which.max, which.min
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: S4Vectors
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'S4Vectors'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     expand.grid, I, unname
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: IRanges
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'IRanges'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:grDevices':
+## 
+##     windows
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: GenomeInfoDb
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: Biobase
+\end{verbatim}
+
+\begin{verbatim}
+## Welcome to Bioconductor
+## 
+##     Vignettes contain introductory material; view with
+##     'browseVignettes()'. To cite Bioconductor, see
+##     'citation("Biobase")', and for packages 'citation("pkgname")'.
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'Biobase'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:MatrixGenerics':
+## 
+##     rowMedians
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:matrixStats':
+## 
+##     anyMissing, rowMedians
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Para normalización}
+\FunctionTok{library}\NormalTok{(}\StringTok{"edgeR"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: limma
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'limma'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:BiocGenerics':
+## 
+##     plotMA
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Para plots y visualización}
+\FunctionTok{library}\NormalTok{(}\StringTok{"ggplot2"}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(}\StringTok{"pheatmap"}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(}\StringTok{"RColorBrewer"}\NormalTok{)}
+\CommentTok{\# Para análisis de Expresión Diferencial}
+\FunctionTok{library}\NormalTok{(}\StringTok{"limma"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{recopilaciuxf3n-de-datos}{%
+\subsubsection{Recopilación de datos}\label{recopilaciuxf3n-de-datos}}
+
+Se buscó un dataset de interés en
+\url{https://jhubiostatistics.shinyapps.io/recount3-study-explorer/}
+
+Para el presente análisis de expresión diferencial se utilizarán datos
+de \url{https://www.ncbi.nlm.nih.gov/sra/?term=SRP079058} procesados con
+\emph{recount3}:
+\url{https://bioconductor.org/packages/release/bioc/html/recount3.html}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Acceder a proyectos disponibles}
+\NormalTok{projects }\OtherTok{\textless{}{-}} \FunctionTok{available\_projects}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 2022-02-07 18:37:20 caching file sra.recount_project.MD.gz.
+\end{verbatim}
+
+\begin{verbatim}
+## 2022-02-07 18:37:21 caching file gtex.recount_project.MD.gz.
+\end{verbatim}
+
+\begin{verbatim}
+## 2022-02-07 18:37:22 caching file tcga.recount_project.MD.gz.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Cargar dataset para crear objeto RangeSummarizedExperiment}
+\NormalTok{rse\_gene\_SRP079058 }\OtherTok{\textless{}{-}} \FunctionTok{create\_rse}\NormalTok{(}
+  \FunctionTok{subset}\NormalTok{(}
+\NormalTok{    projects,}
+\NormalTok{    project}\SpecialCharTok{==}\StringTok{"SRP079058"} \SpecialCharTok{\&}\NormalTok{ project\_type}\SpecialCharTok{==}\StringTok{"data\_sources"}
+\NormalTok{  )}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 2022-02-07 18:37:29 downloading and reading the metadata.
+\end{verbatim}
+
+\begin{verbatim}
+## 2022-02-07 18:37:29 caching file sra.sra.SRP079058.MD.gz.
+\end{verbatim}
+
+\begin{verbatim}
+## 2022-02-07 18:37:31 caching file sra.recount_project.SRP079058.MD.gz.
+\end{verbatim}
+
+\begin{verbatim}
+## 2022-02-07 18:37:32 caching file sra.recount_qc.SRP079058.MD.gz.
+\end{verbatim}
+
+\begin{verbatim}
+## 2022-02-07 18:37:33 caching file sra.recount_seq_qc.SRP079058.MD.gz.
+\end{verbatim}
+
+\begin{verbatim}
+## 2022-02-07 18:37:35 caching file sra.recount_pred.SRP079058.MD.gz.
+\end{verbatim}
+
+\begin{verbatim}
+## 2022-02-07 18:37:35 downloading and reading the feature information.
+\end{verbatim}
+
+\begin{verbatim}
+## 2022-02-07 18:37:36 caching file human.gene_sums.G026.gtf.gz.
+\end{verbatim}
+
+\begin{verbatim}
+## 2022-02-07 18:37:37 downloading and reading the counts: 3589 samples across 63856 features.
+\end{verbatim}
+
+\begin{verbatim}
+## 2022-02-07 18:37:38 caching file sra.gene_sums.SRP079058.G026.gz.
+\end{verbatim}
+
+\begin{verbatim}
+## 2022-02-07 18:37:50 construcing the RangedSummarizedExperiment (rse) object.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Crear matriz assay a partir de objeto SRE. Convertir datos crudos en números de lecturas.}
+\FunctionTok{assay}\NormalTok{(rse\_gene\_SRP079058, }\StringTok{"counts"}\NormalTok{) }\OtherTok{\textless{}{-}} \FunctionTok{compute\_read\_counts}\NormalTok{(rse\_gene\_SRP079058)}
+\end{Highlighting}
+\end{Shaded}
+
+El siguiente paso es asegurar la consistencia de los datos.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Analizando los datos principales se aprecian 63856 genes y 3589 muestras.}
+\NormalTok{rse\_gene\_SRP079058}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## class: RangedSummarizedExperiment 
+## dim: 63856 3589 
+## metadata(8): time_created recount3_version ... annotation recount3_url
+## assays(2): raw_counts counts
+## rownames(63856): ENSG00000278704.1 ENSG00000277400.1 ...
+##   ENSG00000182484.15_PAR_Y ENSG00000227159.8_PAR_Y
+## rowData names(10): source type ... havana_gene tag
+## colnames(3589): SRR3935092 SRR3936092 ... SRR3935999 SRR3936999
+## colData names(175): rail_id external_id ...
+##   recount_pred.curated.cell_line BigWigURL
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# AL analizar los datos, estos parecen tener buena con}
+\NormalTok{rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra.sample\_attributes[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "cell type;;Neoplastic|diagnosis;;glioblastoma|neoplastic;;Neoplastic|patient id;;BT_S2|plate id;;1001000182|selection;;Astrocytes(HEPACAM)|source_name;;Brain|tissue;;Tumor|tsne cluster;;11|well;;G5" 
+##  [2] "cell type;;Immune cell|diagnosis;;glioblastoma|neoplastic;;Regular|patient id;;BT_S4|plate id;;1001000229|selection;;Unpanned|source_name;;Brain|tissue;;Tumor|tsne cluster;;8|well;;B1"               
+##  [3] "cell type;;Neoplastic|diagnosis;;glioblastoma|neoplastic;;Neoplastic|patient id;;BT_S2|plate id;;1001000182|selection;;Astrocytes(HEPACAM)|source_name;;Brain|tissue;;Tumor|tsne cluster;;11|well;;G2" 
+##  [4] "cell type;;Neoplastic|diagnosis;;glioblastoma|neoplastic;;Neoplastic|patient id;;BT_S2|plate id;;1001000182|selection;;Astrocytes(HEPACAM)|source_name;;Brain|tissue;;Tumor|tsne cluster;;11|well;;F11"
+##  [5] "cell type;;Neoplastic|diagnosis;;glioblastoma|neoplastic;;Neoplastic|patient id;;BT_S2|plate id;;1001000182|selection;;Astrocytes(HEPACAM)|source_name;;Brain|tissue;;Tumor|tsne cluster;;11|well;;E10"
+##  [6] "cell type;;Neoplastic|diagnosis;;glioblastoma|neoplastic;;Neoplastic|patient id;;BT_S2|plate id;;1001000182|selection;;Astrocytes(HEPACAM)|source_name;;Brain|tissue;;Tumor|tsne cluster;;11|well;;H1" 
+##  [7] "cell type;;Immune cell|diagnosis;;glioblastoma|neoplastic;;Regular|patient id;;BT_S4|plate id;;1001000230|selection;;Unpanned|source_name;;Brain|tissue;;Tumor|tsne cluster;;8|well;;B3"               
+##  [8] "cell type;;Neoplastic|diagnosis;;glioblastoma|neoplastic;;Neoplastic|patient id;;BT_S2|plate id;;1001000182|selection;;Astrocytes(HEPACAM)|source_name;;Brain|tissue;;Tumor|tsne cluster;;11|well;;C5" 
+##  [9] "cell type;;Immune cell|diagnosis;;glioblastoma|neoplastic;;Regular|patient id;;BT_S4|plate id;;1001000230|selection;;Unpanned|source_name;;Brain|tissue;;Tumor|tsne cluster;;8|well;;B5"               
+## [10] "cell type;;Immune cell|diagnosis;;glioblastoma|neoplastic;;Regular|patient id;;BT_S4|plate id;;1001000246|selection;;Neurons(Thy1)|source_name;;Brain|tissue;;Tumor|tsne cluster;;8|well;;F8"
+\end{verbatim}
+
+En este caso, el dataset no parece tener inconsistencias ni campos no
+uniformemente completos. Por lo que no se realizarán correcciones
+mayores.
+
+A continuación se expandirá la información con los metadatos en
+\emph{colData()} contenidos en \emph{rse\_gene\_SRP079058}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Expandir datos}
+\NormalTok{rse\_gene\_SRP079058 }\OtherTok{\textless{}{-}} \FunctionTok{expand\_sra\_attributes}\NormalTok{(rse\_gene\_SRP079058)}
+\CommentTok{\# Al revisar datos expandidos se ve un aumento en los elementos de "colData\_names"}
+\NormalTok{rse\_gene\_SRP079058}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## class: RangedSummarizedExperiment 
+## dim: 63856 3589 
+## metadata(8): time_created recount3_version ... annotation recount3_url
+## assays(2): raw_counts counts
+## rownames(63856): ENSG00000278704.1 ENSG00000277400.1 ...
+##   ENSG00000182484.15_PAR_Y ENSG00000227159.8_PAR_Y
+## rowData names(10): source type ... havana_gene tag
+## colnames(3589): SRR3935092 SRR3936092 ... SRR3935999 SRR3936999
+## colData names(185): rail_id external_id ... sra_attribute.tsne_cluster
+##   sra_attribute.well
+\end{verbatim}
+
+Ahora se pueden revisar los atributos guardados en \emph{colData} del
+\emph{rse\_gene\_SRP079058}. Nótese que no hay elemento \emph{RIN}, por
+lo que se asumirá que todas las muestras de RNA tienen una calidad
+semejante entre sí.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Aquí se pueden deteminar las variables de interés para el análisis de expresión diferencial.}
+\FunctionTok{colData}\NormalTok{(rse\_gene\_SRP079058)[}
+\NormalTok{    ,}
+    \FunctionTok{grepl}\NormalTok{(}\StringTok{"\^{}sra\_attribute"}\NormalTok{, }\FunctionTok{colnames}\NormalTok{(}\FunctionTok{colData}\NormalTok{(rse\_gene\_SRP079058)))}
+\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## DataFrame with 3589 rows and 10 columns
+##            sra_attribute.cell_type sra_attribute.diagnosis
+##                        <character>             <character>
+## SRR3935092              Neoplastic            glioblastoma
+## SRR3936092             Immune cell            glioblastoma
+## SRR3935107              Neoplastic            glioblastoma
+## SRR3935108              Neoplastic            glioblastoma
+## SRR3935109              Neoplastic            glioblastoma
+## ...                            ...                     ...
+## SRR3935998              Neoplastic            glioblastoma
+## SRR3936998                     OPC            glioblastoma
+## SRR3934999                     OPC            glioblastoma
+## SRR3935999              Neoplastic            glioblastoma
+## SRR3936999             Immune cell            glioblastoma
+##            sra_attribute.neoplastic sra_attribute.patient_id
+##                         <character>              <character>
+## SRR3935092               Neoplastic                    BT_S2
+## SRR3936092                  Regular                    BT_S4
+## SRR3935107               Neoplastic                    BT_S2
+## SRR3935108               Neoplastic                    BT_S2
+## SRR3935109               Neoplastic                    BT_S2
+## ...                             ...                      ...
+## SRR3935998               Neoplastic                    BT_S1
+## SRR3936998                  Regular                    BT_S4
+## SRR3934999                  Regular                    BT_S2
+## SRR3935999               Neoplastic                    BT_S1
+## SRR3936999                  Regular                    BT_S4
+##            sra_attribute.plate_id sra_attribute.selection
+##                       <character>             <character>
+## SRR3935092             1001000182     Astrocytes(HEPACAM)
+## SRR3936092             1001000229                Unpanned
+## SRR3935107             1001000182     Astrocytes(HEPACAM)
+## SRR3935108             1001000182     Astrocytes(HEPACAM)
+## SRR3935109             1001000182     Astrocytes(HEPACAM)
+## ...                           ...                     ...
+## SRR3935998             1001000037     Astrocytes(HEPACAM)
+## SRR3936998             1001000244    Oligodendrocytes(GC)
+## SRR3934999             1001000181     Astrocytes(HEPACAM)
+## SRR3935999             1001000037     Astrocytes(HEPACAM)
+## SRR3936999             1001000244    Oligodendrocytes(GC)
+##            sra_attribute.source_name sra_attribute.tissue
+##                          <character>          <character>
+## SRR3935092                     Brain                Tumor
+## SRR3936092                     Brain                Tumor
+## SRR3935107                     Brain                Tumor
+## SRR3935108                     Brain                Tumor
+## SRR3935109                     Brain                Tumor
+## ...                              ...                  ...
+## SRR3935998                     Brain                Tumor
+## SRR3936998                     Brain            Periphery
+## SRR3934999                     Brain            Periphery
+## SRR3935999                     Brain                Tumor
+## SRR3936999                     Brain            Periphery
+##            sra_attribute.tsne_cluster sra_attribute.well
+##                           <character>        <character>
+## SRR3935092                         11                 G5
+## SRR3936092                          8                 B1
+## SRR3935107                         11                 G2
+## SRR3935108                         11                F11
+## SRR3935109                         11                E10
+## ...                               ...                ...
+## SRR3935998                          1                 D9
+## SRR3936998                          9                 D1
+## SRR3934999                          9                D12
+## SRR3935999                          1                 F4
+## SRR3936999                          7                D10
+\end{verbatim}
+
+El siguiente paso es asegurar que los datos a usar en el modelo
+estadístico tengan el formarto adecuado, renombrando los caracteres a
+números o factores.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.cell\_type }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.cell\_type)}
+
+\NormalTok{rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.diagnosis }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.diagnosis)}
+
+\NormalTok{rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.neoplastic }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.neoplastic)}
+
+\NormalTok{rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.patient\_id }\OtherTok{\textless{}{-}}  \FunctionTok{factor}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.patient\_id)}
+
+\NormalTok{rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.plate\_id }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.plate\_id)}
+
+\NormalTok{rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.selection }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.selection)}
+
+\NormalTok{rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.source\_name }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.source\_name)}
+
+\NormalTok{rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.tissue }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.tissue)}
+
+\NormalTok{rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.tsne\_cluster }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.tsne\_cluster)}
+
+\NormalTok{rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.well }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.well)}
+\end{Highlighting}
+\end{Shaded}
+
+Se analiza el resumen de las variables de interés para proceder con el
+proceso de limpieza de datos.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Poner atención particularmente en la variable de "tissue"}
+\FunctionTok{summary}\NormalTok{(}\FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{colData}\NormalTok{(rse\_gene\_SRP079058)[}
+\NormalTok{  ,}
+  \FunctionTok{grepl}\NormalTok{(}\StringTok{"\^{}sra\_attribute.[cell\_type|neoplastic|selection|tissue]"}\NormalTok{, }\FunctionTok{colnames}\NormalTok{(}\FunctionTok{colData}\NormalTok{(rse\_gene\_SRP079058)))}
+\NormalTok{]))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     sra_attribute.cell_type sra_attribute.neoplastic sra_attribute.patient_id
+##  Astocyte       :  88       Neoplastic:1091          BT_S1: 489              
+##  Immune cell    :1847       Regular   :2498          BT_S2:1169              
+##  Neoplastic     :1091                                BT_S4:1542              
+##  Neuron         :  21                                BT_S6: 389              
+##  Oligodendrocyte:  85                                                        
+##  OPC            : 406                                                        
+##  Vascular       :  51                                                        
+##  sra_attribute.plate_id         sra_attribute.selection
+##  Min.   :1.001e+09      Astrocytes(HEPACAM) : 714      
+##  1st Qu.:1.001e+09      Endothelial(BSC)    : 123      
+##  Median :1.001e+09      Microglia(CD45)     :1108      
+##  Mean   :1.001e+09      Neurons(Thy1)       : 685      
+##  3rd Qu.:1.001e+09      Oligodendrocytes(GC): 294      
+##  Max.   :1.001e+09      Unpanned            : 665      
+##                                                        
+##  sra_attribute.source_name sra_attribute.tissue sra_attribute.tsne_cluster
+##  Brain:3589                Periphery:1246       Min.   : 1.00             
+##                            Tumor    :2343       1st Qu.: 7.00             
+##                                                 Median : 8.00             
+##                                                 Mean   : 7.76             
+##                                                 3rd Qu.: 9.00             
+##                                                 Max.   :12.00             
+## 
+\end{verbatim}
+
+El siguiente paso es encontrar diferencias entre las variables de
+interés. En este caso se busca hacer un \emph{Análisis de Expresión
+Diferencial (AED)} entre los genes expresados en tejidos tumorales o
+periféricos; información del apartado \emph{sra\_attribute.tissue}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Nótese que el factor "tissue" ya cuenta con la clasificación adecuada para el objetivo: análisis de expresión difernecial entre tejidos cancerosos.}
+\FunctionTok{table}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{sra\_attribute.tissue)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Periphery     Tumor 
+##      1246      2343
+\end{verbatim}
+
+A continuación se hace una operación para determinar la \emph{proporción
+de fragmentos de interés}. Véase la documentación en:
+\url{http://rna.recount.bio/docs/quality-check-fields.html}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Hacer el cociente de interés para obtener la proporción de lecturas asignadas a genes}
+\NormalTok{rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{assigned\_gene\_prop }\OtherTok{\textless{}{-}}\NormalTok{ rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{recount\_qc.gene\_fc\_count\_all.assigned }\SpecialCharTok{/}\NormalTok{ rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{recount\_qc.gene\_fc\_count\_all.total}
+
+\CommentTok{\# Al revisar el resumen de los datos resultantes se ve claramente que los datos no son de la mejor calidad, pues la media es 0.17956 y el tercer cuartil es 0.21188. Pero se ve que sí hay muestras de buena calidad con un máximo de 0.96298.}
+\FunctionTok{summary}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{assigned\_gene\_prop)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+## 0.03743 0.12911 0.16379 0.17956 0.21188 0.96298
+\end{verbatim}
+
+El siguiente paso es plotear esos primeros resultados de
+\emph{assigned\_gene\_prop}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{with}\NormalTok{(}\FunctionTok{colData}\NormalTok{(rse\_gene\_SRP079058), }\FunctionTok{plot}\NormalTok{(}\AttributeTok{x =}\NormalTok{ sra\_attribute.tissue,}
+                                       \AttributeTok{y =}\NormalTok{ assigned\_gene\_prop,}
+                                       \AttributeTok{xlab =} \StringTok{"sra\_attribute.tissue"}\NormalTok{,}
+                                       \AttributeTok{ylab =} \StringTok{"assigned\_gene\_prop"}\NormalTok{,}
+                                       \AttributeTok{col =}\NormalTok{ sra\_attribute.tissue))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Reporte_RNAseq_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+Ahora es posible comparar los datos de ambos tejidos directamente. Se
+puede notar que, aunque hay casi el doble de muestras de \emph{tumor}
+(1246) que de \emph{periphery} (2343), ambos tejidos tienen el mismo
+tipo de calidad denotada en \emph{assigned\_gene\_prop}. Ya que ni los
+\emph{boxplots} ni los \emph{summary()} varian mucho, ni en valor
+mínimo, media o máximos.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Buscar diferencia entre los dos grupos de tejidos viendo sus estadísticas con "summary()"}
+\FunctionTok{with}\NormalTok{(}\FunctionTok{colData}\NormalTok{(rse\_gene\_SRP079058), }\FunctionTok{tapply}\NormalTok{(assigned\_gene\_prop, sra\_attribute.tissue, summary))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $Periphery
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+## 0.04144 0.14275 0.18491 0.19452 0.23585 0.96298 
+## 
+## $Tumor
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+## 0.03743 0.12378 0.15536 0.17161 0.19454 0.94821
+\end{verbatim}
+
+Se puede visualizar para las otra variables de interés
+\emph{cell\_type\textbar neoplastic\textbar selection\textbar tissue}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{with}\NormalTok{(}\FunctionTok{colData}\NormalTok{(rse\_gene\_SRP079058), }\FunctionTok{plot}\NormalTok{(}\AttributeTok{x =}\NormalTok{ sra\_attribute.cell\_type,}
+                                       \AttributeTok{y =}\NormalTok{ assigned\_gene\_prop,}
+                                       \AttributeTok{xlab =} \StringTok{"sra\_attribute.cell\_type"}\NormalTok{,}
+                                       \AttributeTok{ylab =} \StringTok{"assigned\_gene\_prop"}\NormalTok{,}
+                                       \AttributeTok{col =}\NormalTok{ sra\_attribute.cell\_type))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Reporte_RNAseq_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{with}\NormalTok{(}\FunctionTok{colData}\NormalTok{(rse\_gene\_SRP079058), }\FunctionTok{plot}\NormalTok{(}\AttributeTok{x =}\NormalTok{ sra\_attribute.neoplastic,}
+                                       \AttributeTok{y =}\NormalTok{ assigned\_gene\_prop,}
+                                       \AttributeTok{xlab =} \StringTok{"sra\_attribute.neoplastic"}\NormalTok{,}
+                                       \AttributeTok{ylab =} \StringTok{"assigned\_gene\_prop"}\NormalTok{,}
+                                       \AttributeTok{col =}\NormalTok{ sra\_attribute.neoplastic))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Reporte_RNAseq_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{with}\NormalTok{(}\FunctionTok{colData}\NormalTok{(rse\_gene\_SRP079058), }\FunctionTok{plot}\NormalTok{(}\AttributeTok{x =}\NormalTok{ sra\_attribute.selection,}
+                                       \AttributeTok{y =}\NormalTok{ assigned\_gene\_prop,}
+                                       \AttributeTok{xlab =} \StringTok{"sra\_attribute.selection"}\NormalTok{,}
+                                       \AttributeTok{ylab =} \StringTok{"assigned\_gene\_prop"}\NormalTok{,}
+                                       \AttributeTok{col =}\NormalTok{ sra\_attribute.selection))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Reporte_RNAseq_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+Se ve que, en general, todas las proporciones asignadas a genes son
+bajas en todas las variables de interés. Esto es indeseado porque se
+busca que los datos tengan la mejor calidad posible; desafortunadamente,
+la mayoría de los datos tienen baja calidad, por lo que será imposible
+purgar los datos sin comprometer la cantidad de los mismos a ser
+analizados.
+
+Para poder comparar los datos sin filtrar originales y filtrados, se
+guardan los primeros en \emph{rse\_gene\_SRP079058\_unfiltered}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Guardar antes de hacer limpieza}
+\NormalTok{rse\_gene\_SRP079058\_unfiltered }\OtherTok{\textless{}{-}}\NormalTok{ rse\_gene\_SRP079058}
+\CommentTok{\# Nótese que me mantienen los 63856 genes y 3589 muestras.}
+\NormalTok{rse\_gene\_SRP079058\_unfiltered}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## class: RangedSummarizedExperiment 
+## dim: 63856 3589 
+## metadata(8): time_created recount3_version ... annotation recount3_url
+## assays(2): raw_counts counts
+## rownames(63856): ENSG00000278704.1 ENSG00000277400.1 ...
+##   ENSG00000182484.15_PAR_Y ENSG00000227159.8_PAR_Y
+## rowData names(10): source type ... havana_gene tag
+## colnames(3589): SRR3935092 SRR3936092 ... SRR3935999 SRR3936999
+## colData names(186): rail_id external_id ... sra_attribute.well
+##   assigned_gene_prop
+\end{verbatim}
+
+Se puede proceder a la limpieza de datos. Por buena práctica y
+convencionalidad, se eliminan muestras y luego se eliminarán genes.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Primero visualizamos un histograma de la proporción de lecturas asignadas a genes. Los datos desde luego que parecen seguir una distribución Normal unimodal con la media en 0.1 \textless{} mu \textless{} 0.2, pues la media obtenida originalmente era 0.17956}
+\FunctionTok{hist}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{assigned\_gene\_prop)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Reporte_RNAseq_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+Para ver el comportamiento y frecuencias de los datos de mejor calidad,
+se iguala el valor de corte a la media, con la finalidad de mover la
+media lo más posible hacia un valor de \emph{assigned\_gene\_prop}
+mayor. La razón esencial de esta decisión es que, si no se eliminan las
+muestras con valores cercanos o menores a la media, la distribución no
+cambiará mucho debido a la enorme diferencia entre la frecuencia de
+muestras con valores de \emph{assigned\_gene\_prop} bajos y altos.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Eliminemos muestras con valor menor a la media. Los resultados son radicales, pues se elimina la mitad de las muestras. Habrá que continuar con el análisis para decidir si mantener dicho cambio o no. Pues aunque se eliminan 2168/3589, las 1421 muestras restantes aun son un buen volumen con el cual trabajar y obtener buenos resultados.}
+\FunctionTok{table}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{assigned\_gene\_prop }\SpecialCharTok{\textless{}} \FunctionTok{summary}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{assigned\_gene\_prop)[}\StringTok{"Mean"}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## FALSE  TRUE 
+##  1421  2168
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Rescatar muestras con assigned\_gene\_prop \textgreater{} 0.17956}
+\NormalTok{rse\_gene\_SRP079058 }\OtherTok{\textless{}{-}}\NormalTok{ rse\_gene\_SRP079058[, rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{assigned\_gene\_prop }\SpecialCharTok{\textgreater{}} \FunctionTok{summary}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{assigned\_gene\_prop)[}\StringTok{"Mean"}\NormalTok{]]}
+\CommentTok{\# Se puede ver que ahora el objeto actualizado solo mantuvo 1421 muestras.}
+\NormalTok{rse\_gene\_SRP079058}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## class: RangedSummarizedExperiment 
+## dim: 63856 1421 
+## metadata(8): time_created recount3_version ... annotation recount3_url
+## assays(2): raw_counts counts
+## rownames(63856): ENSG00000278704.1 ENSG00000277400.1 ...
+##   ENSG00000182484.15_PAR_Y ENSG00000227159.8_PAR_Y
+## rowData names(10): source type ... havana_gene tag
+## colnames(1421): SRR3935131 SRR3935162 ... SRR3935999 SRR3936999
+## colData names(186): rail_id external_id ... sra_attribute.well
+##   assigned_gene_prop
+\end{verbatim}
+
+El siguiente paso es la eliminación de genes. Para ello se necesita
+calcular los \emph{niveles medios de expresión} de los mismos en las
+muestras mantenidas.
+
+\begin{verbatim}
+##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+##     0.00     0.00     0.05    12.09     2.31 67665.04
+\end{verbatim}
+
+Ahora el mínimo se ha igualado a cero. Y es necesario eliminar aquellos
+genes por debajo de cierta expresión, en este caso la de la mediana.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Para asegurar rigor en el proceso se eliminan los genes por debajo de la mediana.}
+\NormalTok{rse\_gene\_SRP079058 }\OtherTok{\textless{}{-}}\NormalTok{ rse\_gene\_SRP079058[gene\_means }\SpecialCharTok{\textgreater{}} \FunctionTok{summary}\NormalTok{(gene\_means)[}\StringTok{"Median"}\NormalTok{], ]}
+\CommentTok{\# Revisar dimensiones finales. Las muestras pasaron de ser 3589{-}\textgreater{}1421, y los genes fueron de 63856{-}\textgreater{}31921}
+\FunctionTok{dim}\NormalTok{(rse\_gene\_SRP079058\_unfiltered)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 63856  3589
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dim}\NormalTok{(rse\_gene\_SRP079058)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 31921  1421
+\end{verbatim}
+
+Se puede revisar el porcentaje de genes que pasaron los criterios de
+limpieza.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Se retoma como punto de referencia "rse\_gene\_SRP079058\_unfiltered" con todos los genes originales sin filtro ni limpieza. Aproximadamente la mitad de los genes prevalecieron.}
+\FunctionTok{round}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(rse\_gene\_SRP079058) }\SpecialCharTok{/} \FunctionTok{nrow}\NormalTok{(rse\_gene\_SRP079058\_unfiltered)}\SpecialCharTok{*}\DecValTok{100}\NormalTok{, }\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 49.99
+\end{verbatim}
+
+Eso quiere decir que se mantuvieron 49.99\% de los genes originales.
+Véanse sus características de interés nuevamente.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Se revisan las nuevas estadísticas. En general, la media aumentó pero se mantiene en un valor relativamente bajo.}
+\FunctionTok{summary}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{assigned\_gene\_prop)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  0.1796  0.2001  0.2280  0.2483  0.2677  0.9630
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{with}\NormalTok{(}\FunctionTok{colData}\NormalTok{(rse\_gene\_SRP079058), }\FunctionTok{plot}\NormalTok{(}\AttributeTok{x =}\NormalTok{ sra\_attribute.tissue,}
+                                       \AttributeTok{y =}\NormalTok{ assigned\_gene\_prop,}
+                                       \AttributeTok{xlab =} \StringTok{"sra\_attribute.tissue"}\NormalTok{,}
+                                       \AttributeTok{ylab =} \StringTok{"assigned\_gene\_prop"}\NormalTok{,}
+                                       \AttributeTok{col =}\NormalTok{ sra\_attribute.tissue))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Reporte_RNAseq_files/figure-latex/unnamed-chunk-18-1.pdf}
+
+Podemos ver que la media del puntaje sí mejoro, pero ínfimamente. Debido
+a que aún se tiene buena cantidad de datos, se propone una segunda
+limpieza con los mismos criterios que la enterior para la eliminación de
+muestras y genes.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Salvamos resultados del primer filtro}
+\NormalTok{rse\_gene\_SRP079058\_fil\_1 }\OtherTok{\textless{}{-}}\NormalTok{ rse\_gene\_SRP079058}
+\CommentTok{\# Corremos una segunda ronda de limpieza}
+\CommentTok{\# Eliminamos muestras}
+\NormalTok{rse\_gene\_SRP079058 }\OtherTok{\textless{}{-}}\NormalTok{ rse\_gene\_SRP079058[, rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{assigned\_gene\_prop }\SpecialCharTok{\textgreater{}} \FunctionTok{summary}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{assigned\_gene\_prop)[}\StringTok{"Mean"}\NormalTok{]]}
+\CommentTok{\# Eliminamos genes}
+\NormalTok{rse\_gene\_SRP079058 }\OtherTok{\textless{}{-}}\NormalTok{ rse\_gene\_SRP079058[}\FunctionTok{rowMeans}\NormalTok{(}\FunctionTok{assay}\NormalTok{(rse\_gene\_SRP079058, }\StringTok{"counts"}\NormalTok{)) }\SpecialCharTok{\textgreater{}} \FunctionTok{summary}\NormalTok{(}\FunctionTok{rowMeans}\NormalTok{(}\FunctionTok{assay}\NormalTok{(rse\_gene\_SRP079058, }\StringTok{"counts"}\NormalTok{)))[}\StringTok{"Median"}\NormalTok{], ]}
+\end{Highlighting}
+\end{Shaded}
+
+Ahora se comparan los datos previos con la segunda limpieza.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Comparamos tres objetos}
+\FunctionTok{summary}\NormalTok{(rse\_gene\_SRP079058\_unfiltered}\SpecialCharTok{$}\NormalTok{assigned\_gene\_prop)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+## 0.03743 0.12911 0.16379 0.17956 0.21188 0.96298
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dim}\NormalTok{(rse\_gene\_SRP079058\_unfiltered)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 63856  3589
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(rse\_gene\_SRP079058\_fil\_1}\SpecialCharTok{$}\NormalTok{assigned\_gene\_prop)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  0.1796  0.2001  0.2280  0.2483  0.2677  0.9630
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dim}\NormalTok{(rse\_gene\_SRP079058\_fil\_1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 31921  1421
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(rse\_gene\_SRP079058}\SpecialCharTok{$}\NormalTok{assigned\_gene\_prop)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  0.2483  0.2632  0.2858  0.3169  0.3201  0.9630
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dim}\NormalTok{(rse\_gene\_SRP079058)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 15958   517
+\end{verbatim}
+
+Se considera que la segunda limpieza mejoró la calidad de los datos para
+que todos sobrepasaran el \emph{assigned\_gene\_prop \textgreater{}
+0.2483}, lo cual se considera un buen criterio. No obstanete, hubo mucha
+información sacrificada. Por lo que queda decidir qué elección de datos
+usar para el resto del análisis.
+
+El dataset final que se usará será el de la segunda limpieza. Con el fin
+de trabajar con los mejores datos; posee mucha menos información que los
+datos originales y tras la primera limpieza, pero aún mantiene buena
+cantidad de datos: 15958 genes \& 517 muestras.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Guardamos los datos en una variable que especifica el segundo filtro.}
+\NormalTok{rse\_gene\_SRP079058\_fil\_2 }\OtherTok{\textless{}{-}}\NormalTok{ rse\_gene\_SRP079058}
+\NormalTok{rse\_gene\_SRP079058\_fil\_2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## class: RangedSummarizedExperiment 
+## dim: 15958 517 
+## metadata(8): time_created recount3_version ... annotation recount3_url
+## assays(2): raw_counts counts
+## rownames(15958): ENSG00000227232.5 ENSG00000279457.4 ...
+##   ENSG00000012817.15 ENSG00000198692.9
+## rowData names(10): source type ... havana_gene tag
+## colnames(517): SRR3935131 SRR3935263 ... SRR3935999 SRR3936999
+## colData names(186): rail_id external_id ... sra_attribute.well
+##   assigned_gene_prop
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Se puede apreciar que la media creció y que la mayoría de datos tiene un puntaje \textless{} 0.4. Debido al gran sacrificio de datos que ya se realizaó con las dos limpiezas, ya no se realizarán más de las mismas.}
+\FunctionTok{hist}\NormalTok{(rse\_gene\_SRP079058\_fil\_2}\SpecialCharTok{$}\NormalTok{assigned\_gene\_prop)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Reporte_RNAseq_files/figure-latex/unnamed-chunk-22-1.pdf}
+
+\hypertarget{normalizaciuxf3n}{%
+\subsubsection{Normalización}\label{normalizaciuxf3n}}
+
+Una vez con los datos curados, se procede a la normalización de los
+mismos mediante la librería \emph{edgeR}. Esta normalización se asegura
+de que los mismos niveles de expresión en dos muestras no sean
+detectados como Diferencialmente Expresados. Recordando que una
+heurística del método es la asunción de que la mayoría de los genes no
+están Diferencialmente Expresados.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Crear librería con el tipo de objeto DGEList adecuado.}
+\NormalTok{dge }\OtherTok{\textless{}{-}} \FunctionTok{DGEList}\NormalTok{(}
+  \AttributeTok{counts =} \FunctionTok{assay}\NormalTok{(rse\_gene\_SRP079058\_fil\_2, }\StringTok{"counts"}\NormalTok{),}
+  \AttributeTok{genes =} \FunctionTok{rowData}\NormalTok{(rse\_gene\_SRP079058\_fil\_2)}
+\NormalTok{)}
+\CommentTok{\# Convertir librería cruda en una de tamaño efectivo.}
+\NormalTok{dge }\OtherTok{\textless{}{-}} \FunctionTok{calcNormFactors}\NormalTok{(dge)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{anuxe1lisis-de-expresiuxf3n-diferencial}{%
+\subsubsection{Análisis de Expresión
+Diferencial}\label{anuxe1lisis-de-expresiuxf3n-diferencial}}
+
+Se puede revisar la expresión en \emph{rse\_gene\_SRP07905} con
+boxplots.
+
+\includegraphics{Reporte_RNAseq_files/figure-latex/unnamed-chunk-23-1.pdf}
+
+Ahora se crea un modelo estadístico pertinente. En esta ocasión se opta
+por uno simple para obtener resultados más directos. Pero nótese que aún
+así, las combinaciones dan un modelo complejo con 15 coeficientes.
+
+\begin{verbatim}
+##  [1] "(Intercept)"                                
+##  [2] "sra_attribute.tissueTumor"                  
+##  [3] "sra_attribute.neoplasticRegular"            
+##  [4] "sra_attribute.selectionEndothelial(BSC)"    
+##  [5] "sra_attribute.selectionMicroglia(CD45)"     
+##  [6] "sra_attribute.selectionNeurons(Thy1)"       
+##  [7] "sra_attribute.selectionOligodendrocytes(GC)"
+##  [8] "sra_attribute.selectionUnpanned"            
+##  [9] "sra_attribute.cell_typeImmune cell"         
+## [10] "sra_attribute.cell_typeNeoplastic"          
+## [11] "sra_attribute.cell_typeNeuron"              
+## [12] "sra_attribute.cell_typeOligodendrocyte"     
+## [13] "sra_attribute.cell_typeOPC"                 
+## [14] "sra_attribute.cell_typeVascular"            
+## [15] "assigned_gene_prop"
+\end{verbatim}
+
+Ya se tiene el modelo estadístico, ahora se realiza el análisis de
+expresión diferencial con el paquete \emph{limma}, el cual usa la
+distribución binomial negativa para modelar los datos. Para estimar sus
+coeficientes, se encuentran máximos (relativos) de forma iterativa.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Usar "voom" como el método iterativo hasta converger.}
+\NormalTok{vGene }\OtherTok{\textless{}{-}} \FunctionTok{voom}\NormalTok{(dge, mod, }\AttributeTok{plot =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Coefficients not estimable: sra_attribute.cell_typeNeoplastic sra_attribute.cell_typeNeuron
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Partial NA coefficients for 15958 probe(s)
+\end{verbatim}
+
+\includegraphics{Reporte_RNAseq_files/figure-latex/voom-1.pdf}
+
+La gráfica de \emph{voom} tiene los valores de expresión en el eje X y
+la varianza en el eje Y, y se puede apreciar un comportamiento
+asintótico favorable. Pero los estimados de varianza todavía pueden
+mejorarse, para aumentar la precisión de los resultados estadísticos.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Calcular t.Values con limma (t{-}Student)}
+\NormalTok{eb\_results }\OtherTok{\textless{}{-}} \FunctionTok{eBayes}\NormalTok{(}\FunctionTok{lmFit}\NormalTok{(vGene))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Coefficients not estimable: sra_attribute.cell_typeNeoplastic sra_attribute.cell_typeNeuron
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Partial NA coefficients for 15958 probe(s)
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in .ebayes(fit = fit, proportion = proportion, stdev.coef.lim =
+## stdev.coef.lim, : Estimation of var.prior failed - set to default value
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Seleccionar coeficiente de interés para "tissueTumor", con referencia a "tissuePeriphery" (Intercept). Recordar mantener el orden original.}
+\NormalTok{de\_results }\OtherTok{\textless{}{-}} \FunctionTok{topTable}\NormalTok{(}
+\NormalTok{  eb\_results,}
+  \AttributeTok{coef =} \DecValTok{2}\NormalTok{,}
+  \AttributeTok{number =} \FunctionTok{nrow}\NormalTok{(rse\_gene\_SRP079058\_fil\_2),}
+  \AttributeTok{sort.by =} \StringTok{"none"}
+\NormalTok{)}
+\CommentTok{\# Revisar los resultados}
+\CommentTok{\# Se obtienen 16 columnas de interés para los 15958 genes.}
+\FunctionTok{dim}\NormalTok{(de\_results)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 15958    16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Explorar resultados}
+\FunctionTok{head}\NormalTok{(de\_results)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                   source type bp_length phase           gene_id
+## ENSG00000227232.5 HAVANA gene      1351    NA ENSG00000227232.5
+## ENSG00000279457.4 HAVANA gene      1397    NA ENSG00000279457.4
+## ENSG00000241670.3 HAVANA gene       457    NA ENSG00000241670.3
+## ENSG00000228463.9 HAVANA gene      4039    NA ENSG00000228463.9
+## ENSG00000225972.1 HAVANA gene       372    NA ENSG00000225972.1
+## ENSG00000225630.1 HAVANA gene      1044    NA ENSG00000225630.1
+##                                gene_type     gene_name level
+## ENSG00000227232.5 unprocessed_pseudogene        WASH7P     2
+## ENSG00000279457.4 unprocessed_pseudogene RP11-34P13.18     2
+## ENSG00000241670.3   processed_pseudogene     RPL23AP21     1
+## ENSG00000228463.9                lincRNA    AP006222.2     2
+## ENSG00000225972.1 unprocessed_pseudogene      MTND1P23     2
+## ENSG00000225630.1 unprocessed_pseudogene      MTND2P28     2
+##                            havana_gene               tag      logFC   AveExpr
+## ENSG00000227232.5 OTTHUMG00000000958.1              <NA> -1.0599247 0.7628755
+## ENSG00000279457.4 OTTHUMG00000191963.1              <NA> -0.9214964 0.7945466
+## ENSG00000241670.3 OTTHUMG00000002552.1 overlapping_locus -0.3123646 0.4458882
+## ENSG00000228463.9 OTTHUMG00000002553.3 overlapping_locus -0.4413163 0.5851748
+## ENSG00000225972.1 OTTHUMG00000002338.1              <NA> -0.2573954 6.0119826
+## ENSG00000225630.1 OTTHUMG00000002336.1              <NA> -0.2874714 7.3204231
+##                            t      P.Value    adj.P.Val         B
+## ENSG00000227232.5 -5.7630234 1.416908e-08 1.245786e-07  9.275287
+## ENSG00000279457.4 -4.6967332 3.387549e-06 1.340072e-05  4.127299
+## ENSG00000241670.3 -1.7885911 7.426276e-02 1.011165e-01 -5.000156
+## ENSG00000228463.9 -2.3519867 1.904546e-02 2.972395e-02 -3.828320
+## ENSG00000225972.1 -1.1189228 2.636897e-01 3.135122e-01 -5.244942
+## ENSG00000225630.1 -0.9165369 3.598103e-01 4.129937e-01 -5.431833
+\end{verbatim}
+
+Ahora se deben rescatar los genes Diferencialmente Expresados entre
+\emph{tissue.tumor} y \emph{tissue.periphery}. Recordando el modelo
+\emph{t = tissue.tumor - tissue.periphery}. Por convención se utilizará
+el \emph{False Discovery Rate} con \emph{FDR \textless{} 0.05}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Purgar con base en P.Values.}
+\FunctionTok{table}\NormalTok{(de\_results}\SpecialCharTok{$}\NormalTok{adj.P.Val }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## FALSE  TRUE 
+##  5069 10889
+\end{verbatim}
+
+Los resultados dan 10889 genes Diferencialmente Expresados, un
+comportamiento esperado tieniendo en cuenta que la pregunta biológica
+base es la comparación de niveles de expresión de genes entre tejidos
+tumorales y periféricos de glioblastoma. Y desde luego que hay
+diferencia entre los genes expresados en ambos tejidos, puesto que el
+cancer es una enfermedad caracterizada por su complejidad genómica.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Ahora visualicemos los resultados estadísticos. Recordando que el coeficiente de interés es el 2: "tissueTumor"}
+\FunctionTok{plotMA}\NormalTok{(eb\_results, }\AttributeTok{coef =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Reporte_RNAseq_files/figure-latex/unnamed-chunk-24-1.pdf}
+
+Al analizar el gráfico que compara el logFC y el promedio de expresión,
+se puede ver que los resultados se concentran un una zona particular con
+el \emph{Average log-expression} entre 0 y 5; y el \emph{logFC}
+principalmente entre -1 y 0.
+
+También se puede visualizar con un \emph{Volcano Plot}, que muestra el
+log2FC en eje X y -log(P.val). Buscando los valores con el -log(P.val)
+más alto que serán los más Diferencialmente Expresados.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Seguir teniendo presente el coeficiente de interés 2: tissueTumor.}
+\FunctionTok{volcanoplot}\NormalTok{(eb\_results, }\AttributeTok{coef =} \DecValTok{2}\NormalTok{, }\AttributeTok{highlight =} \DecValTok{4}\NormalTok{, }\AttributeTok{names =}\NormalTok{ de\_results}\SpecialCharTok{$}\NormalTok{gene\_name)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Reporte_RNAseq_files/figure-latex/volcanoPlot-1.pdf}
+
+Algo sumamente interesante es que la mayoría de los niveles de
+\emph{log2FC} son negativos entre -1 y 0. Lo cual apunta a que la
+\textbf{Subexpresión Diferencial} de dichos genes son la principal
+diferencia entre tejido periférico y tumoral. Esto apunta a que la
+mayoría de los \textbf{los genes rescatados del dataset son genes
+supresores de tumores subexpresados en tejido tumoral.} Los cuatro genes
+rescatados con el volcano plot son:
+
+\begin{itemize}
+\tightlist
+\item
+  PLPP4 \url{https://www.genecards.org/cgi-bin/carddisp.pl?gene=PLPP4}
+\item
+  C1QL2 \url{https://www.genecards.org/cgi-bin/carddisp.pl?gene=C1QL2}
+\item
+  SMOC1 \url{https://www.genecards.org/cgi-bin/carddisp.pl?gene=SMOC1}
+\item
+  TMEM132D
+  \url{https://www.genecards.org/cgi-bin/carddisp.pl?gene=TMEM132D}
+\end{itemize}
+
+\hypertarget{resultados}{%
+\subsection{Resultados}\label{resultados}}
+
+El siguiente paso es la visualización de los resultados: genes
+Diferencialmente Expresados.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Recuperar un número pertinente de genes con mayor Expresión Diferencial normalizada. Recordando que el parámetro es el P.val ajustado.}
+\NormalTok{gene\_number }\OtherTok{\textless{}{-}} \DecValTok{50}
+\NormalTok{expr\_heatmap }\OtherTok{\textless{}{-}}\NormalTok{ vGene}\SpecialCharTok{$}\NormalTok{E[}\FunctionTok{rank}\NormalTok{(de\_results}\SpecialCharTok{$}\NormalTok{adj.P.Val) }\SpecialCharTok{\textless{}=}\NormalTok{ gene\_number, ]}
+\CommentTok{\# Extraer variables complementarias al análisis}
+\NormalTok{df }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{colData}\NormalTok{(rse\_gene\_SRP079058\_fil\_2)[, }\FunctionTok{c}\NormalTok{(}\StringTok{"sra\_attribute.tissue"}\NormalTok{, }\StringTok{"sra\_attribute.neoplastic"}\NormalTok{, }\StringTok{"sra\_attribute.selection"}\NormalTok{, }\StringTok{"sra\_attribute.cell\_type"}\NormalTok{)])}
+\CommentTok{\# Nombrar variables}
+\FunctionTok{colnames}\NormalTok{(df) }\OtherTok{\textless{}{-}}\FunctionTok{c}\NormalTok{(}\StringTok{"Tissue"}\NormalTok{, }\StringTok{"Neoplastic"}\NormalTok{, }\StringTok{"Selection"}\NormalTok{, }\StringTok{"Cell\_type"}\NormalTok{)}
+\CommentTok{\# Visualizar df}
+\FunctionTok{head}\NormalTok{(df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##               Tissue Neoplastic           Selection       Cell_type
+## SRR3935131     Tumor Neoplastic Astrocytes(HEPACAM)      Neoplastic
+## SRR3935263     Tumor Neoplastic       Neurons(Thy1)      Neoplastic
+## SRR3935265     Tumor Neoplastic       Neurons(Thy1)      Neoplastic
+## SRR3936275 Periphery    Regular            Unpanned Oligodendrocyte
+## SRR3936277 Periphery    Regular            Unpanned Oligodendrocyte
+## SRR3936278 Periphery    Regular            Unpanned Oligodendrocyte
+\end{verbatim}
+
+Se puede continuar con la visualización gráfica de los resultados para
+extraer más conclusiones.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Obtener nombres de genes}
+\FunctionTok{rownames}\NormalTok{(expr\_heatmap) }\OtherTok{\textless{}{-}} \FunctionTok{rowRanges}\NormalTok{(rse\_gene\_SRP079058\_fil\_2)}\SpecialCharTok{$}\NormalTok{gene\_name[}\FunctionTok{which}\NormalTok{(}\FunctionTok{rank}\NormalTok{(de\_results}\SpecialCharTok{$}\NormalTok{adj.P.Val) }\SpecialCharTok{\textless{}=}\NormalTok{ gene\_number)]}
+\CommentTok{\# Se hace un heatmap con clustering de genes y muestras.}
+\FunctionTok{pheatmap}\NormalTok{(}
+\NormalTok{  expr\_heatmap,}
+  \AttributeTok{cluster\_rows =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{cluster\_cols =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{show\_rownames =} \ConstantTok{TRUE}\NormalTok{,}
+  \AttributeTok{show\_colnames =} \ConstantTok{FALSE}\NormalTok{,}
+  \AttributeTok{annotation\_col =}\NormalTok{ df}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Reporte_RNAseq_files/figure-latex/heatmap-1.pdf}
+
+Otro análisis interesante es el de \emph{Principal Component Analisis
+(PCA)} entre las variables de interés. Primero puede ser sobre los tipos
+de tejido.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Seleccionar datos sobre tipo de tejido.}
+\NormalTok{col.group }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{Tissue}
+\CommentTok{\# Convertir los tejidos en colores}
+\FunctionTok{levels}\NormalTok{(col.group) }\OtherTok{\textless{}{-}} \FunctionTok{brewer.pal}\NormalTok{(}\FunctionTok{nlevels}\NormalTok{(col.group), }\StringTok{"Set1"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in brewer.pal(nlevels(col.group), "Set1"): minimal value for n is 3, returning requested palette with 3 different levels
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Convertir elementos en caracteres}
+\NormalTok{col.group }\OtherTok{\textless{}{-}} \FunctionTok{as.character}\NormalTok{(col.group)}
+\CommentTok{\# MDS por tipo de tejido}
+\FunctionTok{plotMDS}\NormalTok{(vGene}\SpecialCharTok{$}\NormalTok{E, }\AttributeTok{labels =}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{Tissue, }\AttributeTok{col =}\NormalTok{ col.group)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Reporte_RNAseq_files/figure-latex/MDS por tejido-1.pdf}
+
+También puede ser sobre el tipo celular.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Seleccionar datos sobre tipo celular}
+\NormalTok{col.group }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{Cell\_type}
+\CommentTok{\# Convertir los tipos celulares en colores}
+\FunctionTok{levels}\NormalTok{(col.group) }\OtherTok{\textless{}{-}} \FunctionTok{brewer.pal}\NormalTok{(}\FunctionTok{nlevels}\NormalTok{(col.group), }\StringTok{"Set1"}\NormalTok{)}
+\CommentTok{\# Convertir elementos en caracteres}
+\NormalTok{col.group }\OtherTok{\textless{}{-}} \FunctionTok{as.character}\NormalTok{(col.group)}
+\CommentTok{\# MDS por tipo celular}
+\FunctionTok{plotMDS}\NormalTok{(vGene}\SpecialCharTok{$}\NormalTok{E, }\AttributeTok{labels =}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{Cell\_type, }\AttributeTok{col =}\NormalTok{ col.group)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Reporte_RNAseq_files/figure-latex/MDS por tipo celular-1.pdf}
+
+O sobre la selección celular.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Seleccionar datos sobre selección}
+\NormalTok{col.group }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{Selection}
+\CommentTok{\# Convertir los tipos en colores}
+\FunctionTok{levels}\NormalTok{(col.group) }\OtherTok{\textless{}{-}} \FunctionTok{brewer.pal}\NormalTok{(}\FunctionTok{nlevels}\NormalTok{(col.group), }\StringTok{"Set1"}\NormalTok{)}
+\CommentTok{\# Convertir elementos en caracteres}
+\NormalTok{col.group }\OtherTok{\textless{}{-}} \FunctionTok{as.character}\NormalTok{(col.group)}
+\CommentTok{\# MDS por selección}
+\FunctionTok{plotMDS}\NormalTok{(vGene}\SpecialCharTok{$}\NormalTok{E, }\AttributeTok{labels =}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{Selection, }\AttributeTok{col =}\NormalTok{ col.group)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Reporte_RNAseq_files/figure-latex/MDS por selección celular-1.pdf}
+
+O finalmente sobre el estado de neoplasticidad.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Seleccionar datos sobre neoplasticidad}
+\NormalTok{col.group }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{Neoplastic}
+\CommentTok{\# Convertir los estados en colores}
+\FunctionTok{levels}\NormalTok{(col.group) }\OtherTok{\textless{}{-}} \FunctionTok{brewer.pal}\NormalTok{(}\FunctionTok{nlevels}\NormalTok{(col.group), }\StringTok{"Set1"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in brewer.pal(nlevels(col.group), "Set1"): minimal value for n is 3, returning requested palette with 3 different levels
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Convertir elementos en caracteres}
+\NormalTok{col.group }\OtherTok{\textless{}{-}} \FunctionTok{as.character}\NormalTok{(col.group)}
+\CommentTok{\# MDS por neoplasticidad}
+\FunctionTok{plotMDS}\NormalTok{(vGene}\SpecialCharTok{$}\NormalTok{E, }\AttributeTok{labels =}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{Neoplastic, }\AttributeTok{col =}\NormalTok{ col.group)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Reporte_RNAseq_files/figure-latex/MDS por neoplasticidad-1.pdf}
+
+\hypertarget{discusiuxf3n}{%
+\subsection{Discusión}\label{discusiuxf3n}}
+
+Como se puede observar a lo largo de los 4 plots principales, los datos
+poseen una dirección pero con cierto ruido. En el primer plot, el
+heatmap, se puede observar que los genes más altamente expresados son
+muy escasos, y la mayoría tiene un nivel de expresión cercano a cero, o
+bien, están subexpresados. Este comportamiento seguramente tiene su base
+en la calidad de los datos, pues hay que recordar que el dataset fue
+sometido a dos rondas de limpieza a través de las cuales una
+considerable cantidad de información fue sacrificada. Esto puede indicar
+que, los cambios ligeros en los niveles de expresión de los genes son
+inherentes a la formación de glioblastoma; lo cual es algo totalmente
+plausible, puesto que ligera sobreexpresión o subexpresión de ciertos
+genes clave puede ser suficiente para desencadenar los procesos
+oncogénicos.
+
+Analizando más a fondo dicho primer heatmap, se puede observar que los
+niveles de expresión de ciertos genes resaltan de entre los demás.
+Algunos ligeramente notorios son: \emph{SMOC1},
+\emph{RP11\textasciitilde{}}, \emph{DSEL} \& \emph{LYL1}. Los cuales ya
+se han relacionado directamente con ciertos tipos de cáncer incluido el
+glioblastoma, por lo que su expresión es totalmente esperada. No
+obstante, el más notorio es indudablemente \emph{FTH1P2}, el cual parece
+Expresarse Diferencialmente a lo largo de todos los tejidos, pero sus
+zonas rojas de mayor expresión corresponden a tejido tumoral y las de
+mediana expresión a tejido periférico. Este gen, \emph{FTH1P2}, es un
+realidad el \emph{Ferritin Heavy Chain 1 Pseudogene 2}, y participa en
+el metabolismo y regulación del \emph{Fe}. Este punto es sumamente
+interesante, puesto que desde finales de los 90's se ha investigado la
+relación que posee el metabolismo y altas concentraciones de
+\emph{Ferretina} con el surgimiento de \emph{glioblastoma}.{[}2.1{]} Más
+actualmente, evidencia en 2020 ha apuntado a que los tumores gliales
+sintetizan y secretan ferretina, causando ferretinemia asociada a
+\emph{Glioblastoma Multiforme (GBM)}. {[}2.2{]} Y finalmente, desde 2021
+se ha asociado más la homeostásis del Fe como un punto crítico en el
+desarrollo de muchos tipos de cáncer, incluyendo el glioblastoma; siendo
+la sobreprodución e incremento en los niveles de Fe y ferretina un
+factor clave. {[}2.3{]}
+
+Se puede apreciar que los niveles de expresión de genes sí son
+diferentes entre el tejido periférico y el tumoral; de particular
+interés es de nuevo \emph{FTH1P2} que se expresa constantemente a lo
+largo de todas las muestras de tejido, pero sus niveles de expresión
+mayores son en el tejido tumoral. Lo cual apoya y concuerda con la
+teoría mecionada de que la homeostásis y sobrereglación del hierro es
+importante en el desarrollo de tumores, y en este caso particular, de
+glioblastoma.
+
+Al analizar los otros cuatro plots que muestran un \emph{PCA}, se puede
+ver una clara separación de las muestras en dos nubes diagonales
+marcadas. Cuando se analiza sobre el tipo de tejido, se puede observar
+que la mayoría de tejido tumoral y periférico sí se separa en dos nubes,
+pero con cierto ruido que perturba la segunda nube de tejido tumoral.
+Con respecto al tipo celular, se observa que la separación principal
+entre el primer y segundo cluster aisla completamente el tipo celular
+\emph{immune cell} de los otros, los cuales a su vez también se pueden
+separar en subclusters más pequeños pero aún aglomerados. Comparando los
+dos primeros plots, se observa una relación entre ambas primeras nubes
+correspondientes a \emph{periphery\_immuneCell}; una segunda relación es
+\emph{tumor\_neoplastic}. Esta última relación parece lógica debido a
+que la neoplasia maligna usualmente conlleva la formación tumores. Este
+último punto también presenta concordancia con el cuarto plot, pues se
+pueden apreciar las relacione entre el primer, segundo y cuarto plot:
+\emph{periphery\_immuneCell\_Regular} y
+\emph{tumor\_neoplastic\_neoplastic}; lo cual mantiene la lógica de que
+la expresión en tejido periférico es relativamente regular, mientras que
+la expresión en tejido tumoral se asocia con la neoplasia. Finalmente,
+el tercer plot no guarda una relación muy directa con los otros tres,
+pero sí separa la selección celular de \emph{MicrogliaCD48} de las
+demás, lo cual podría sugerir que la expresión del glioblastoma en la
+microglia es diferente a la de los astrocitos, neuronas y
+oligodendrocitos; y que estos últimos presentan patrones de expresión
+similares.
+
+Un último punto a resaltar es que, posiblemente, los resultados hubieran
+sido más particulares y con menos ruido si los datos utilizados hubieran
+tenido mejor calidad: proporción de expresión asociada a genes. Esto fue
+un problema constante a lo largo de todo el análisis, puesto que la
+media de proporción asignada a genes era muy próxima a 0.25. Como se
+discutió anteriormente, esto podría ser una pecularidad intrínseca de
+los datos de glioblastoma, y se optó por mantener esos niveles para no
+sacrificar más muestras y genes en el proceso. Quizá, lo niveles de
+expresión rescatados en el heatmap y los clusters principales de los
+cuatro PCA's hubieran tenido menos ruido y más resultados notorios y
+contundentes si se hubiera realizado una tercer ronda de limpieza, pero
+seguramente hubiera erradicado aún más información.
+
+\hypertarget{conclusiones}{%
+\subsection{Conclusiones}\label{conclusiones}}
+
+En conclusión, los \emph{Análisis de Expresión Diferencial (AED)} son
+herramientas poderosas para hallar los niveles de expresión de genes en
+ciertas muestras de tejido o células; y pueden tener implicaciones en
+muchas áreas que van desde la investigación básica hasta la clínica. La
+actividad y regulación de genes es un fenómeno importante a lo largo de
+las diferentes ramas de las ciencias biológicas, y hacer uso de los
+recursos computaciones y de software es una estrategia muy eficiente
+para obtener los mejores resultados en su medición. Desde luego que un
+elemento de suma importancia en el análisis de \emph{datos de
+secuenciación masiva}, y del \emph{big data} en general, es la calidad y
+consistencia de los mismos datos; la base de todo.
+
+Desde luego que metodologías tan complejas como esta deben ser llevadas
+a cabo cuidadosa y rigurosamente, pues todas las etapas para los mejores
+AED's deben ser llevadas a cabo correctamente para asegurar la
+consistencia de todos los resultados; estas etapas van desde la pregunta
+de investigación planteada, la descarga de los datos, su limpieza,
+normalización, selección del modelo bioestadístico y consiguiente
+análisis. Por supuesto que la correcta interpretación de los resultados
+también es esencial, por lo que, además de saber usar las herramientas
+bioinformáticas y de software, también es menester tener los
+conocimientos biológicos necesarios.
+
+Finalmente, es determinante subrayar la importancia de dichas
+herramientas bioinformáticas y bioestadísticas implementadas. La
+disponibilidad de software de bioinformática y los paquetes usados en
+este análisis por parte de \emph{Bioconductor}
+(\url{http://bioconductor.org/}) fueron vitales. Es indudable que la
+continua disposición y creación de software de acceso libre está
+abriendo las puertas para experimentos y análisis \emph{dry-lab}, que
+permiten la conexión de diversas disciplinas e ideas científicas a lo
+largo del mundo, permitiendo llegar cada vez más lejos y más rápido.
+
+\hypertarget{fuentes-y-ligas-de-interuxe9s}{%
+\subsection{Fuentes y ligas de
+interés}\label{fuentes-y-ligas-de-interuxe9s}}
+
+\hypertarget{introducciuxf3n}{%
+\subsubsection{Introducción}\label{introducciuxf3n}}
+
+\begin{itemize}
+\tightlist
+\item
+  1.1) Le Rhun, Emilie; Preusser, Matthias; Roth, Patrick; Reardon,
+  David A; van den Bent, Martin; Wen, Patrick; Reifenberger, Guido;
+  Weller, Michael (2019). Molecular targeted therapy of glioblastoma.
+  Cancer Treatment Reviews, 80:101896.
+\item
+  1.2) Wirsching HG, Galanis E, Weller M. Glioblastoma. Handb Clin
+  Neurol. 2016;134:381-97. doi: 10.1016/B978-0-12-802997-8.00023-2.
+  PMID: 26948367.
+\end{itemize}
+
+\hypertarget{discusiuxf3n-1}{%
+\subsubsection{Discusión}\label{discusiuxf3n-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  2.1) Sato Y, Honda Y, Asoh T, Oizumi K, Ohshima Y, Honda E.
+  Cerebrospinal fluid ferritin in glioblastoma: evidence for tumor
+  synthesis. J Neurooncol. 1998 Oct;40(1):47-50. doi:
+  10.1023/a:1006078521790. PMID: 9874185.
+\item
+  2.2) Jaksch-Bogensperger, H., Spiegl-Kreinecker, S., Arosio, P. et
+  al.~Ferritin in glioblastoma. Br J Cancer 122, 1441--1444 (2020).
+  \url{https://doi.org/10.1038/s41416-020-0808-8}
+\item
+  2.3) Guo, Q., Li, L., Hou, S., Yuan, Z., Li, C., Zhang, W., Zheng, L.,
+  \& Li, X. (2021). The Role of Iron in Cancer Progression. Frontiers in
+  oncology, 11, 778492. \url{https://doi.org/10.3389/fonc.2021.778492}
+\end{itemize}
+
+\hypertarget{documentaciuxf3n-de-libreruxedas}{%
+\subsubsection{Documentación de
+Librerías}\label{documentaciuxf3n-de-libreruxedas}}
+
+\begin{verbatim}
+## 
+## Collado-Torres L (2022). _Explore and download data from the recount3
+## project_. doi: 10.18129/B9.bioc.recount3 (URL:
+## https://doi.org/10.18129/B9.bioc.recount3),
+## https://github.com/LieberInstitute/recount3 - R package version 1.4.0,
+## <URL: http://www.bioconductor.org/packages/recount3>.
+## 
+## Wilks C, Zheng SC, Chen FY, Charles R, Solomon B, Ling JP, Imada EL,
+## Zhang D, Joseph L, Leek JT, Jaffe AE, Nellore A, Collado-Torres L,
+## Hansen KD, Langmead B (2021). "recount3: summaries and queries for
+## large-scale RNA-seq expression and splicing." _bioRxiv_. doi:
+## 10.1101/2021.05.21.445138 (URL:
+## https://doi.org/10.1101/2021.05.21.445138), <URL:
+## https://doi.org/10.1101/2021.05.21.445138>.
+## 
+## To see these entries in BibTeX format, use 'print(<citation>,
+## bibtex=TRUE)', 'toBibtex(.)', or set
+## 'options(citation.bibtex.max=999)'.
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## See Section 1.2 in the User's Guide for more detail about how to cite
+## the different edgeR pipelines.
+## 
+##   Robinson MD, McCarthy DJ and Smyth GK (2010). edgeR: a Bioconductor
+##   package for differential expression analysis of digital gene
+##   expression data. Bioinformatics 26, 139-140
+## 
+##   McCarthy DJ, Chen Y and Smyth GK (2012). Differential expression
+##   analysis of multifactor RNA-Seq experiments with respect to
+##   biological variation. Nucleic Acids Research 40, 4288-4297
+## 
+##   Chen Y, Lun ATL, Smyth GK (2016). From reads to genes to pathways:
+##   differential expression analysis of RNA-Seq experiments using
+##   Rsubread and the edgeR quasi-likelihood pipeline. F1000Research 5,
+##   1438
+## 
+## To see these entries in BibTeX format, use 'print(<citation>,
+## bibtex=TRUE)', 'toBibtex(.)', or set
+## 'options(citation.bibtex.max=999)'.
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## To cite ggplot2 in publications, please use:
+## 
+##   H. Wickham. ggplot2: Elegant Graphics for Data Analysis.
+##   Springer-Verlag New York, 2016.
+## 
+## A BibTeX entry for LaTeX users is
+## 
+##   @Book{,
+##     author = {Hadley Wickham},
+##     title = {ggplot2: Elegant Graphics for Data Analysis},
+##     publisher = {Springer-Verlag New York},
+##     year = {2016},
+##     isbn = {978-3-319-24277-4},
+##     url = {https://ggplot2.tidyverse.org},
+##   }
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## To cite package 'pheatmap' in publications use:
+## 
+##   Raivo Kolde (2019). pheatmap: Pretty Heatmaps. R package version
+##   1.0.12. https://CRAN.R-project.org/package=pheatmap
+## 
+## A BibTeX entry for LaTeX users is
+## 
+##   @Manual{,
+##     title = {pheatmap: Pretty Heatmaps},
+##     author = {Raivo Kolde},
+##     year = {2019},
+##     note = {R package version 1.0.12},
+##     url = {https://CRAN.R-project.org/package=pheatmap},
+##   }
+## 
+## ATTENTION: This citation information has been auto-generated from the
+## package DESCRIPTION file and may need manual editing, see
+## 'help("citation")'.
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## To cite package 'RColorBrewer' in publications use:
+## 
+##   Erich Neuwirth (2014). RColorBrewer: ColorBrewer Palettes. R package
+##   version 1.1-2. https://CRAN.R-project.org/package=RColorBrewer
+## 
+## A BibTeX entry for LaTeX users is
+## 
+##   @Manual{,
+##     title = {RColorBrewer: ColorBrewer Palettes},
+##     author = {Erich Neuwirth},
+##     year = {2014},
+##     note = {R package version 1.1-2},
+##     url = {https://CRAN.R-project.org/package=RColorBrewer},
+##   }
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Please cite the paper below for the limma software itself.  Please also
+## try to cite the appropriate methodology articles that describe the
+## statistical methods implemented in limma, depending on which limma
+## functions you are using.  The methodology articles are listed in
+## Section 2.1 of the limma User's Guide.
+## 
+##   Ritchie, M.E., Phipson, B., Wu, D., Hu, Y., Law, C.W., Shi, W., and
+##   Smyth, G.K. (2015). limma powers differential expression analyses for
+##   RNA-sequencing and microarray studies. Nucleic Acids Research 43(7),
+##   e47.
+## 
+## A BibTeX entry for LaTeX users is
+## 
+##   @Article{,
+##     author = {Matthew E Ritchie and Belinda Phipson and Di Wu and Yifang Hu and Charity W Law and Wei Shi and Gordon K Smyth},
+##     title = {{limma} powers differential expression analyses for {RNA}-sequencing and microarray studies},
+##     journal = {Nucleic Acids Research},
+##     year = {2015},
+##     volume = {43},
+##     number = {7},
+##     pages = {e47},
+##     doi = {10.1093/nar/gkv007},
+##   }
+\end{verbatim}
+
+\end{document}
